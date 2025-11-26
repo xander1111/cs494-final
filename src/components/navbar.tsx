@@ -4,7 +4,7 @@ import { NavbarButton } from "./navbarButton";
 export function Navbar() {
     return (
         <Box
-            height="5rem"
+            height="4rem"
             sx={{
                 bgcolor: 'common.black',
                 display: 'flex',

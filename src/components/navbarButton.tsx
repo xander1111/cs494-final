@@ -7,9 +7,6 @@ export function NavbarButton(props: { color: "inherit" | "error" | "primary" | "
             <Button
                 color={props.color}
                 variant='contained'
-                sx={{
-                    m: 1
-                }}
             >
                 <Typography variant='navbar' >{props.text}</Typography>
             </Button>

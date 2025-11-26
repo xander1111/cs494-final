@@ -42,6 +42,9 @@ export const theme = createTheme({
             white: "#EFEFEF",
             black: "#343434",
         },
+        background: {
+            default: "#EFEFEF",
+        },
         primary: {
             main: '#7E72FF',
             contrastText: "#EFEFEF",
@@ -67,21 +70,21 @@ export const theme = createTheme({
     typography: {
         fontFamily: notoSans.style.fontFamily,
         cardHeader: {
-            fontSize: '2rem',
-            fontWeight: 700,
+            fontSize: '1.2rem',
+            fontWeight: 600,
         },
         cardSubheader: {
-            fontSize: '1.6rem'
+            fontSize: '1rem'
         },
         navbar: {
-            fontSize: '1.6rem'
-        },
-        search: {
             fontSize: '1.2rem'
         },
-        button: {
-            fontWeight: 700,
+        search: {
+            fontSize: '0.7rem'
         },
+        // button: {
+        //     fontWeight: 700,
+        // },
     },
 
     components: {
@@ -93,16 +96,28 @@ export const theme = createTheme({
                     paddingRight: 20,
                     fontWeight: 400,
                     textTransform: 'none',
+                    height: '2.5rem',
+                    margin: '0.5rem',
                 },
             },
         },
-        // MuiPaper: {
-        //     styleOverrides: {
-        //         root: {
-        //             borderRadius: 12,
-        //             padding: 16,
-        //         },
-        //     },
-        // },
+        MuiDivider: {
+            styleOverrides: {
+                root: {
+                    width: '100%',
+                    borderBottomWidth: '0.15rem',
+                }
+            }
+        },
+        MuiStack: {
+            defaultProps: {
+                spacing: 1
+            },
+            styleOverrides: {
+                root: {
+                    alignItems: 'center',
+                }
+            }
+        }
     },
 })

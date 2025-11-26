@@ -1,24 +1,23 @@
-import { Box } from "@mui/material";
+import { Box, Grid, Stack } from "@mui/material";
+
+import { WeeklyProgressCard } from "@/components/weeklyProgressCard";
 
 export default function Home() {
   return (
     <main>
       <Box sx={{
-        bgcolor: 'common.white',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: 'calc(100vh - 5rem)',
-        marginTop: '5rem',
+        minHeight: 'calc(100vh - 4rem)',
+        marginTop: '4rem',
       }}>
-        <Box height='75%'>
-          <Box height='100%'>
-            {/** Weekly progress card */}
-          </Box>
-          <Box height='100%'>
+        <Stack>
+          <WeeklyProgressCard />
+          <Grid>
             {/** Current progress cards */}
-          </Box>
-        </Box>
+          </Grid>
+        </Stack>
       </Box>
     </main>
   );
