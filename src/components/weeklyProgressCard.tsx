@@ -1,8 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
 import StyledCard from "./styledCard";
 import StyledDivider from "./styledDivider";
-import { ProgressCard } from "./progressCard";
+import { WeeklyProgressEntry } from "./weeklyProgressEntry";
 
 export function WeeklyProgressCard() {
     return (
@@ -17,10 +17,10 @@ export function WeeklyProgressCard() {
                 <StyledDivider />
 
                 <Stack alignItems='flex-start'>
-                    <ProgressCard header="Algorithms Learned" subheader="Learned [47] total new algorithms" color='error.main' />
-                    <ProgressCard header="Corners Learned" subheader="Learned [35] new algorithms" color='secondary.main' />
-                    <ProgressCard header="Edges Learned" subheader="Learned [12] new algorithms" color='primary.main' />
-                    <ProgressCard header="Letter Pairs Added" subheader="Added [60] new letter pairs" color='success.main' />
+                    <WeeklyProgressEntry header="Algorithms Learned" subheader="Learned [47] total new algorithms" color='error.main' letter="A" />
+                    <WeeklyProgressEntry header="Corners Learned" subheader="Learned [35] new algorithms" color='secondary.main' letter="C" />
+                    <WeeklyProgressEntry header="Edges Learned" subheader="Learned [12] new algorithms" color='primary.main' letter="E" />
+                    <WeeklyProgressEntry header="Letter Pairs Added" subheader="Added [60] new letter pairs" color='success.main' letter="L" />
                 </Stack>
 
             </Stack>
