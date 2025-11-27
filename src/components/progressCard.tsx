@@ -1,4 +1,4 @@
-import { Avatar, CircularProgress, Stack, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Stack, Typography } from "@mui/material";
 import StyledCard from "./styledCard";
 
 export function ProgressCard(props: { type: string }) {
@@ -7,13 +7,16 @@ export function ProgressCard(props: { type: string }) {
             <Stack direction='row' spacing={2} justifyContent='space-evenly' alignItems='center' height='100%' >
                 <Avatar sx={{ bgcolor: 'common.black', width: '40%', height: '40%', borderRadius: '10%' }}>{props.type}</Avatar>
                 <Stack width={"40%"}>
-                    <CircularProgress
-                        enableTrackSlot
-                        size='80%'
-                        variant='determinate'
-                        color='primary'
-                        value={10}
-                    />
+                    <Box display='flex' justifyContent='center' alignItems='center' width='80%' height='80%'>
+                        <CircularProgress
+                            enableTrackSlot
+                            size='100%'
+                            variant='determinate'
+                            color='primary'
+                            value={10}
+                        />
+                        <Typography variant='cardSubheader' position='absolute'>{10}%</Typography>
+                    </Box>
                     <Typography variant='cardHeader'>{props.type}</Typography>
                     <Typography variant='cardSubheader' textAlign='center'>[x/y]</Typography>
                 </Stack>
