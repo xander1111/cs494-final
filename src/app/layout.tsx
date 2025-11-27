@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 
+import { Box } from "@mui/material";
+
 import { AppThemeProvider } from "@/theme/themeProvider";
 import { Navbar } from "@/components/navbar";
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +21,17 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <Navbar />
-          {children}
+          <main>
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: 'calc(100vh - 4rem)',
+              marginTop: '4rem',
+            }}>
+              {children}
+            </Box>
+          </main>
         </body>
       </html>
     </AppThemeProvider>

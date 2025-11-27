@@ -1,8 +1,8 @@
 import { Stack, Typography } from "@mui/material";
 
-import StyledCard from "./styledCard";
-import StyledDivider from "./styledDivider";
-import { WeeklyProgressEntry } from "./weeklyProgressEntry";
+import StyledCard from "@/components/styledCard";
+import StyledDivider from "@/components/styledDivider";
+import { WeeklyProgressEntry } from "@/components/weeklyProgressEntry";
 
 export function WeeklyProgressCard() {
     return (

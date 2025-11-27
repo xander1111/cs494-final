@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { NavbarButton } from "./navbarButton";
+import { NavbarButton } from "@/components/navbarButton";
 
 export function Navbar() {
     return (

@@ -1,5 +1,5 @@
 import { Avatar, Stack, Typography } from "@mui/material";
-import StyledCard from "./styledCard";
+import StyledCard from "@/components/styledCard";
 
 export function WeeklyProgressEntry(props: { header: string, subheader: string, color: string, letter: string }) {
     return (

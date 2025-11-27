@@ -1,5 +1,5 @@
 import { Avatar, Box, CircularProgress, Stack, Typography } from "@mui/material";
-import StyledCard from "./styledCard";
+import StyledCard from "@/components/styledCard";
 
 export function ProgressCard(props: { type: string }) {
     return (
