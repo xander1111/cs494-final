@@ -23,12 +23,12 @@ export function ProgressCard(props: { type: string, color: 'primary' | 'secondar
                             variant='determinate'
                             color={props.color}
                             value={10}
-                            sx={{
+                            sx={(theme) => ({
                                 '& .MuiCircularProgress-track': {
-                                    color: 'common.black',
-                                    opacity: '20%'
+                                    color: theme.palette.common.black,
+                                    opacity: 0.2
                                 }
-                            }}
+                            })}
                         />
                         <Typography variant='cardSubheader' position='absolute'>{10}%</Typography>
                     </Box>

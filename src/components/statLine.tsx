@@ -15,12 +15,12 @@ export function StatLine(props: { category: string, numericCompletion: string, p
                         variant='determinate'
                         color={props.color}
                         value={props.percentCompletion}
-                        sx={{
+                        sx={(theme) => ({
                             '& .MuiCircularProgress-track': {
-                                color: 'common.black',
-                                opacity: '20%'
+                                color: theme.palette.common.black,
+                                opacity: 0.2
                             }
-                        }}
+                        })}
                     />
                     <Typography variant='small' position='absolute'>{props.percentCompletion}%</Typography>
                 </Box>
