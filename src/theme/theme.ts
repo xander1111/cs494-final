@@ -14,7 +14,7 @@ declare module '@mui/material/styles' {
         cardHeader: React.CSSProperties;
         cardSubheader: React.CSSProperties;
         navbar: React.CSSProperties;
-        search: React.CSSProperties;
+        small: React.CSSProperties;
     }
 
     // allow configuration using `createTheme()`
@@ -22,7 +22,7 @@ declare module '@mui/material/styles' {
         cardHeader?: React.CSSProperties;
         cardSubheader?: React.CSSProperties;
         navbar?: React.CSSProperties;
-        search?: React.CSSProperties;
+        small?: React.CSSProperties;
     }
 }
 
@@ -32,7 +32,7 @@ declare module '@mui/material/Typography' {
         cardHeader: true;
         cardSubheader: true;
         navbar: true;
-        search: true;
+        small: true;
     }
 }
 
@@ -79,8 +79,8 @@ export const theme = createTheme({
         navbar: {
             fontSize: '1.2rem'
         },
-        search: {
-            fontSize: '0.7rem'
+        small: {
+            fontSize: '0.8rem'
         },
         // button: {
         //     fontWeight: 700,

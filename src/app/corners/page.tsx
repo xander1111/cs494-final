@@ -8,6 +8,8 @@ import { List, MenuItem, Stack, Typography } from "@mui/material";
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
 import { CaseCard } from "@/components/caseCard";
+import { StatsCard } from "@/components/statsCard";
+import { StatLine } from "@/components/statLine";
 
 
 export default function Home() {
@@ -32,7 +34,7 @@ export default function Home() {
                             <MenuItem value="learned">Learned</MenuItem>
                         </StyledSelect>
                     </Stack>
-                    {/* Filter chip */}
+                    {/* TODO Filter chip */}
                 </Stack>
                 <List
                     sx={{
@@ -60,7 +62,18 @@ export default function Home() {
                     <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
                 </List>
             </Stack>
-            {/* Stats card */}
+            <StatsCard type="Corner">
+                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} color='error'/>
+                <StatLine category="U-Up, D-Side" numericCompletion="x/y" percentCompletion={12} color='success'/>
+                <StatLine category="U-Up, D-Down" numericCompletion="x/y" percentCompletion={34} color='success'/>
+                <StatLine category="D-Down, D-Down" numericCompletion="x/y" percentCompletion={56} color='success'/>
+                <StatLine category="D-Side, D-Side" numericCompletion="x/y" percentCompletion={78} color='secondary'/>
+                <StatLine category="LFU/BRU, D-Any" numericCompletion="x/y" percentCompletion={90} color='secondary'/>
+                <StatLine category="U-Side, D-Any" numericCompletion="x/y" percentCompletion={12} color='secondary'/>
+                <StatLine category="D-Side, D-Down" numericCompletion="x/y" percentCompletion={23} color='secondary'/>
+                <StatLine category="U-Any, U-Any" numericCompletion="x/y" percentCompletion={34} color='primary'/>
+                <StatLine category="Special" numericCompletion="x/y" percentCompletion={45} color='primary'/>
+            </StatsCard>
         </Stack>
     );
 }

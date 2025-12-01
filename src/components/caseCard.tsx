@@ -1,13 +1,13 @@
 import { Checkbox, InputLabel, Stack, Typography } from "@mui/material";
 import StyledCard from "@/components/styledCard";
 
-export function CaseCard(props: { case: string, algorithm: string, color: 'primary' | 'secondary' }) {
+export function CaseCard(props: { case: string, algorithm: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
             <Stack direction='row' justifyContent='space-between' spacing={2} >
                 <Stack alignItems='flex-start'>
                     <Typography variant="cardHeader" color={props.color}>{props.case}</Typography>
-                    <Typography variant="cardSubheader" textAlign='center'>{props.algorithm}</Typography>
+                    <Typography variant="cardSubheader" color='common.black' textAlign='center'>{props.algorithm}</Typography>
                 </Stack>
                 <Stack spacing={0}>
                     <Checkbox color={props.color} />

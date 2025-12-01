@@ -1,7 +1,7 @@
 import { Avatar, Box, CircularProgress, Stack, Typography } from "@mui/material";
 import StyledCard from "@/components/styledCard";
 
-export function ProgressCard(props: { type: string }) {
+export function ProgressCard(props: { type: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     return (
         <StyledCard sx={{ width: '100%', aspectRatio: 1 }}>
             <Stack direction='row' spacing={2} justifyContent='space-evenly' alignItems='center' height='100%' >
@@ -12,7 +12,7 @@ export function ProgressCard(props: { type: string }) {
                             enableTrackSlot
                             size='100%'
                             variant='determinate'
-                            color='primary'
+                            color={props.color}
                             value={10}
                             sx={{
                                 '& .MuiCircularProgress-track': {

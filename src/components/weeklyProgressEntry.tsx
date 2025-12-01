@@ -7,8 +7,8 @@ export function WeeklyProgressEntry(props: { header: string, subheader: string, 
             <Stack direction='row' justifyContent='flex-start' spacing={2} >
                 <Avatar sx={{ bgcolor: props.color }}>{props.letter}</Avatar>
                 <Stack alignItems='flex-start'>
-                    <Typography variant="cardHeader">{props.header}</Typography>
-                    <Typography variant="cardSubheader" textAlign='center'>{props.subheader}</Typography>
+                    <Typography variant="cardHeader" color='common.black'>{props.header}</Typography>
+                    <Typography variant="cardSubheader" color='common.black' textAlign='center'>{props.subheader}</Typography>
                 </Stack>
             </Stack>
         </StyledCard>
