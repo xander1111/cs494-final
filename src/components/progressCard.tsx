@@ -1,13 +1,9 @@
-'use client'
-
-import { Avatar, Box, CircularProgress, Stack, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, CircularProgress, Stack, Typography } from "@mui/material";
 import StyledCard from "@/components/styledCard";
 import { ReactNode } from "react";
 import Link from "next/link";
 
 export function ProgressCard(props: { type: string, color: 'primary' | 'secondary' | 'error' | 'success', icon: ReactNode, href?: string }) {
-    const theme = useTheme();
-    
     return (
         <StyledCard sx={{ width: '100%', aspectRatio: 1 }}>
             <Stack direction='row' spacing={2} justifyContent='space-evenly' alignItems='center' height='100%' >
@@ -29,7 +25,7 @@ export function ProgressCard(props: { type: string, color: 'primary' | 'secondar
                             value={10}
                             sx={{
                                 '& .MuiCircularProgress-track': {
-                                    color: theme.palette.common.black,
+                                    color: 'common.black',
                                     opacity: 0.2
                                 }
                             }}
