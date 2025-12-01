@@ -1,3 +1,5 @@
+'use client'
+
 import { Avatar, Box, CircularProgress, Stack, Typography } from "@mui/material";
 import StyledCard from "@/components/styledCard";
 import { ReactNode } from "react";
