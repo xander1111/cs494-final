@@ -41,7 +41,7 @@ export function CaseCard(props: { case: string, algorithm: string, color: 'prima
                     </Stack>
                 </Stack>
 
-                <Collapse in={expanded} timeout='auto' sx={{ width: '100%' }}>
+                <Collapse in={expanded} timeout='auto' sx={{ width: '100%' }} unmountOnExit>
                     <Stack direction='column' spacing={2} width='100%'>
                         <StyledDivider />
                         <Stack direction='row' spacing={2}>

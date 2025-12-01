@@ -34,7 +34,7 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                     </Stack>
                 </Stack>
 
-                <Collapse in={expanded} timeout='auto' sx={{ width: '100%' }}>
+                <Collapse in={expanded} timeout='auto' sx={{ width: '100%' }} unmountOnExit>
                     <Stack direction='column' width='100%' spacing={2}>
                         <StyledDivider />
                         <Stack direction='row' width='100%' spacing={2} alignItems='stretch'>

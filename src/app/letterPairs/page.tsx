@@ -31,7 +31,7 @@ export default function Home() {
                             color='success'
                         >
                             <MenuItem value="alphabetical">Alphabetical</MenuItem>
-                            <MenuItem value="learned">Learned</MenuItem>
+                            <MenuItem value="wordCount">Number of Words</MenuItem>
                         </StyledSelect>
                     </Stack>
                     {/* TODO Filter chip */}
