@@ -7,21 +7,21 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.common.black,
         borderWidth: '2px',
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.secondary.main,
-        borderWidth: '2px',
-    },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.secondary.main,
-        borderWidth: '3px',
-    },
+    }
 }));
 
 // Wrapper component to add MenuProps
-const StyledSelectWithMenu = (props: SelectProps) => (
+const StyledSelectWithMenu = (props: SelectProps & {color: string}) => (
     <StyledSelect
         {...props}
+        sx={{
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: `${props.color}.main`,
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: `${props.color}.main`,
+            },
+        }}
         MenuProps={{
             PaperProps: {
                 sx: {
@@ -30,10 +30,14 @@ const StyledSelectWithMenu = (props: SelectProps) => (
                     '& .MuiMenuItem-root': {
                         color: 'common.black',
                         '&:hover': {
-                            bgcolor: 'secondary.light',
+                            bgcolor: `${props.color}.light`,
                         },
                         '&.Mui-selected': {
-                            bgcolor: 'secondary.main',
+                            bgcolor: `${props.color}.main`,
+                            color: 'common.white',
+                        },
+                        '&.Mui-selected :hover': {
+                            bgcolor: `${props.color}.main`,
                             color: 'common.white',
                         },
                     },

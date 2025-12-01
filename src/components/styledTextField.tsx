@@ -1,6 +1,6 @@
 'use client'
 
-import { TextField } from "@mui/material";
+import { TextField, TextFieldProps } from "@mui/material";
 import { styled } from "@mui/system";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -9,21 +9,33 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
             borderColor: theme.palette.common.black,
             borderWidth: '2px',
         },
-        '&:hover fieldset': {
-            borderColor: theme.palette.secondary.main,
-            borderWidth: '2px',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: theme.palette.secondary.main,
-            borderWidth: '3px',
-        },
     },
     '& .MuiFormLabel-root': {
         color: theme.palette.common.black,
     },
-    '& .MuiFormLabel-root.Mui-focused': {
-        color: theme.palette.secondary.main,
-    },
 }))
 
-export default StyledTextField
+const StyledTextFieldWithColor = (props: TextFieldProps & { color: string }) => (
+    <StyledTextField
+        {...props}
+
+        sx={{
+            '& .MuiOutlinedInput-root': {
+                '&:hover fieldset': {
+                    borderColor: `${props.color}.main`,
+                    borderWidth: '2px',
+                },
+                '&.Mui-focused fieldset': {
+                    borderColor: `${props.color}.main`,
+                    borderWidth: '3px',
+                },
+            },
+            '& .MuiFormLabel-root.Mui-focused': {
+                color: `${props.color}.main`,
+            },
+        }}
+
+    />
+);
+
+export default StyledTextFieldWithColor

@@ -20,7 +20,7 @@ export function Navbar() {
                 <NavbarButton color='error' text="Home" href='/' />
                 <NavbarButton color='secondary' text="Corners" href='/corners' />
                 <NavbarButton color='primary' text="Edges" href='/edges' />
-                <NavbarButton color='success' text="Letter Pairs" href='/letters' />
+                <NavbarButton color='success' text="Letter Pairs" href='/letterPairs' />
             </Box>
             <NavbarButton color='warning' text="Login" href='/auth' />
         </Box>
