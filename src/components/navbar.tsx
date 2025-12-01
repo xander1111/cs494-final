@@ -1,8 +1,14 @@
+'use client'
+
 import { Box } from "@mui/material";
 
 import HomeIcon from '@mui/icons-material/Home';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from "@mui/icons-material/Logout";
+
+
+import { useUser } from "@/contexts/userContext";
 
 import { NavbarButton } from "@/components/navbarButton";
 import { CornerGridIcon } from "@/components/cornerGridIcon";
@@ -10,6 +16,8 @@ import { EdgeGridIcon } from "@/components/edgeGridIcon";
 
 
 export function Navbar() {
+    const user = useUser();
+
     return (
         <Box
             height="4rem"
@@ -30,7 +38,12 @@ export function Navbar() {
                 <NavbarButton color='primary' text="Edges" href='/edges' icon={<EdgeGridIcon />} />
                 <NavbarButton color='success' text="Letter Pairs" href='/letterPairs' icon={<TextFieldsIcon />} />
             </Box>
-            <NavbarButton color='warning' text="Login" href='/auth' icon={<LoginIcon />} />
+            {
+                user.user ?
+                    <NavbarButton color='warning' text="Log out" href='/api/signOut' icon={<LogoutIcon />} />
+                    :
+                    <NavbarButton color='warning' text="Log in" href='/login' icon={<LoginIcon />} />
+            }
         </Box>
     )
 }
