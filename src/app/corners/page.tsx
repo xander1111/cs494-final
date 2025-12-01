@@ -46,21 +46,21 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
 
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
-                    <CaseCard case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="AB" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
+                    <CaseCard type='corner' case="DG" algorithm="x' R' D R' U2 R D' R' U2 R2 x" color='secondary' />
                 </List>
             </Stack>
             <StatsCard type="Corner">

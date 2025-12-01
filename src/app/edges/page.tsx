@@ -46,21 +46,21 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
 
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
-                    <CaseCard case="AB" algorithm="R2' U: [R2, S]" color='primary' />
-                    <CaseCard case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
+                    <CaseCard type='edge' case="AB" algorithm="R2' U: [R2, S]" color='primary' />
+                    <CaseCard type='edge' case="BS" algorithm="(U M U M')2" color='primary' />
                 </List>
             </Stack>
             <StatsCard type="Edge">

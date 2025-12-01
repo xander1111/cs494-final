@@ -1,4 +1,6 @@
-import { useState } from "react";
+'use client'
+
+import { useEffect, useState } from "react";
 
 import { Checkbox, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -7,12 +9,21 @@ import SchoolIcon from '@mui/icons-material/School';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
+import { Algorithm } from "@/types/algorithm";
+
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
-export function CaseCard(props: { case: string, algorithm: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { type: string, case: string, algorithm: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const [expanded, setExpanded] = useState<boolean>(false);
+    const [algorithms, setAlgorithms] = useState<Algorithm[]>([])
+
+    useEffect(() => {
+        fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case[0]}&target_b=${props.case[1]}`)
+            .then(data => data.json())
+            .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
+    }, [])
 
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
@@ -52,7 +63,13 @@ export function CaseCard(props: { case: string, algorithm: string, color: 'prima
                                 </IconButton>
                             </Tooltip>
                         </Stack>
-                        <Typography variant='cardSubheader'>Example algorithm</Typography>
+                        {
+                            algorithms.map((alg, i) => (
+                                <Tooltip key={i} title="Click to select this algorithm">
+                                    <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
+                                </Tooltip>
+                            ))
+                        }
                     </Stack>
                 </Collapse>
 
