@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const algorithm = await supabase
+    const res = await supabase
         .from("algorithms")
         .select("*")
         .eq("type", type)
@@ -23,5 +23,5 @@ export async function GET(req: NextRequest) {
         .eq("target_a", target_a)
         .eq("target_b", target_b)
 
-    return Response.json({ algorithms: algorithm.data as Algorithm[] })
+    return Response.json({ algorithms: res.data as Algorithm[] })
 }

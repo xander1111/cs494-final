@@ -17,11 +17,11 @@ import StyledTextField from "@/components/styledTextField";
 
 export function CaseCard(props: { type: string, case: string, algorithm: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const [expanded, setExpanded] = useState<boolean>(false);
-    const [algorithms, setAlgorithms] = useState<Algorithm[]>([])
+    const [algorithms, setAlgorithms] = useState<Algorithm[] | undefined>()
 
 
     function loadAlgorithms() {
-        if (algorithms.length == 0) {
+        if (!algorithms) {
             fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case[0]}&target_b=${props.case[1]}`)
                 .then(data => data.json())
                 .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
@@ -70,7 +70,7 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
                             </Tooltip>
                         </Stack>
                         {
-                            algorithms.length > 0 ?
+                            algorithms ?
                                 algorithms.map((alg, i) => (
                                     <Tooltip key={i} title="Click to select this algorithm">
                                         <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
