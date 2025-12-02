@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Checkbox, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Checkbox, CircularProgress, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
 import EditIcon from '@mui/icons-material/Edit';
 import SchoolIcon from '@mui/icons-material/School';
@@ -19,11 +19,14 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
     const [expanded, setExpanded] = useState<boolean>(false);
     const [algorithms, setAlgorithms] = useState<Algorithm[]>([])
 
-    useEffect(() => {
-        fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case[0]}&target_b=${props.case[1]}`)
-            .then(data => data.json())
-            .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
-    }, [])
+
+    function loadAlgorithms() {
+        if (algorithms.length == 0) {
+            fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case[0]}&target_b=${props.case[1]}`)
+                .then(data => data.json())
+                .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
+        }
+    }
 
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
@@ -39,7 +42,10 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
                                 color='common.black'
                                 textAlign='center'
                                 sx={{ cursor: 'pointer' }}
-                                onClick={() => { setExpanded(!expanded) }}
+                                onClick={() => {
+                                    setExpanded(!expanded)
+                                    loadAlgorithms()
+                                }}
                             >
                                 {props.algorithm} <EditIcon sx={{ fontSize: 'inherit' }} />
                             </Typography>
@@ -64,11 +70,14 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
                             </Tooltip>
                         </Stack>
                         {
-                            algorithms.map((alg, i) => (
-                                <Tooltip key={i} title="Click to select this algorithm">
-                                    <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
-                                </Tooltip>
-                            ))
+                            algorithms.length > 0 ?
+                                algorithms.map((alg, i) => (
+                                    <Tooltip key={i} title="Click to select this algorithm">
+                                        <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
+                                    </Tooltip>
+                                ))
+                                :
+                                <CircularProgress color={props.color} />
                         }
                     </Stack>
                 </Collapse>
