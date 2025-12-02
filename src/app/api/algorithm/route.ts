@@ -16,12 +16,26 @@ export async function GET(req: NextRequest) {
 
     const supabase = await createClient()
     const res = await supabase
-        .from("algorithms")
-        .select("*")
-        .eq("type", type)
+        .from('cases')
+        .select(`
+            id,
+            buffer,
+            target_a,
+            target_b,
+            algorithms ( id, algorithm, type )
+        `)
         .eq("buffer", buffer)
         .eq("target_a", target_a)
         .eq("target_b", target_b)
+        .eq("algorithms.type", type)
 
-    return Response.json({ algorithms: res.data as Algorithm[] })
+    if (res.error) {
+        return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
+    }
+
+    if (res.data.length == 0) {
+        return Response.json({ algorithms: [] as Algorithm[] })
+    }
+
+    return Response.json({ algorithms: res.data[0].algorithms as Algorithm[] })
 }

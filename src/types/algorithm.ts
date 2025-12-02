@@ -1,7 +1,8 @@
+import { Case } from "@/types/case"
+
 export type Algorithm = {
     id: number,
-    buffer: string,
-    target_a: string,
-    target_b: string,
     algorithm: string,
+    type: string,
+    case?: Case,
 }
