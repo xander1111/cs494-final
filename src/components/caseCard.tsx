@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Checkbox, CircularProgress, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -28,6 +28,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
     const [algorithmUsed, setAlgorithmUsed] = useState<Algorithm | undefined>()
     const [userAlg, setUserAlg] = useState<UserAlgorithm | undefined>()
     const [loadingAlgUsed, setLoadingAlgUsed] = useState<boolean>(true)
+    const [learned, setLearned] = useState<boolean | undefined>()
 
     const validInput = useMemo(() => /^[RUFLDBMESrufldbmeswxyz\'\[\]\(\)\:\,\s\d]+$/.test(enteredAlg) || enteredAlg.length == 0, [enteredAlg])
     const getHelperText = useMemo(() => (validInput ? "" : "Invalid algorithm notation"), [validInput])
@@ -97,6 +98,33 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
         updateUsedAlgs()
     }
 
+    async function toggleLearned() {
+        async function loadLearned() {
+            const res = await fetch(`/api/learned_algs?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const data = await res.json()
+
+            setLearned(data.learned)
+        }
+
+        setLearned(undefined)  // Displays loading wheel
+
+        if (!learned) {
+            // Going from not learned to learned
+            await fetch('/api/learned_algs', {
+                method: 'POST',
+                body: JSON.stringify({ case: props.case, type: props.type })
+            })
+        } else {
+            // Going from learned to not learned
+            await fetch('/api/learned_algs', {
+                method: 'DELETE',
+                body: JSON.stringify({ case: props.case, type: props.type })
+            })
+        }
+
+        loadLearned()
+    }
+
     useEffect(() => {
         async function updateUsedAlgs() {
             setLoadingAlgUsed(true)
@@ -108,7 +136,15 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
             setLoadingAlgUsed(false)
         }
 
+        async function loadLearned() {
+            const res = await fetch(`/api/learned_algs?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const data = await res.json()
+
+            setLearned(data.learned)
+        }
+
         updateUsedAlgs()
+        loadLearned()
     }, [])
 
     return (
@@ -141,9 +177,21 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
 
                     </Stack>
                     <Stack spacing={0}>
-                        <Tooltip title="Mark as learned">
-                            <Checkbox color={props.color} icon={<SchoolOutlinedIcon />} checkedIcon={<SchoolIcon />} />
-                        </Tooltip>
+                        {
+                            learned == undefined ?
+                                <CircularProgress color={props.color} />
+                                :
+                                <Tooltip title="Mark as learned">
+                                    <Checkbox
+                                        color={props.color}
+                                        icon={<SchoolOutlinedIcon />}
+                                        checkedIcon={<SchoolIcon />}
+                                        checked={learned}
+                                        onClick={toggleLearned}
+                                    />
+                                </Tooltip>
+                        }
+
                     </Stack>
                 </Stack>
 
