@@ -17,8 +17,8 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
             )
         `)
         .eq("type", type)
-        .eq("user_algorithm.user_uuid", user.data.user.id)
+        .eq("user_algorithm.user_uuid", session.user.id)
         .eq("cases.buffer", buffer)
         .eq("cases.target_a", target_a)
         .eq("cases.target_b", target_b)

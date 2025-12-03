@@ -15,8 +15,8 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
                 type,
                 cases!inner ( id, buffer, target_a, target_b )
         `)
-        .eq("user_uuid", user.data.user.id)
+        .eq("user_uuid", session.user.id)
         .eq("type", type)
         .eq("cases.buffer", buffer)
         .eq("cases.target_a", target_a)
@@ -62,8 +62,8 @@ export async function POST(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
             case_id,
             type
         `)
-        .eq("user_uuid", user.data.user.id)
+        .eq("user_uuid", session.user.id)
         .eq("case_id", cs.id)
         .eq("type", type)
 
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     const res = await supabase
         .from('learned_algs')
         .insert({
-            user_uuid: user.data.user.id,
+            user_uuid: session.user.id,
             case_id: cs.id,
             type: type,
         })
@@ -119,8 +119,8 @@ export async function DELETE(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -132,7 +132,7 @@ export async function DELETE(req: NextRequest) {
             case_id,
             type
         `)
-        .eq("user_uuid", user.data.user.id)
+        .eq("user_uuid", session.user.id)
         .eq("case_id", cs.id)
         .eq("type", type)
 
@@ -147,7 +147,7 @@ export async function DELETE(req: NextRequest) {
     const res = await supabase
         .from('learned_algs')
         .delete()
-        .eq("user_uuid", user.data.user.id)
+        .eq("user_uuid", session.user.id)
         .eq("id", findExisting.data[0].id)
         .eq("type", type)
         .select()

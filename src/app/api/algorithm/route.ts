@@ -58,8 +58,8 @@ export async function POST(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 

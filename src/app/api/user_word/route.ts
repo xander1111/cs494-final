@@ -13,8 +13,8 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
             user_uuid,
             words!inner ( id, letter_pair, word )
         `)
-        .eq("user_uuid", user.data.user.id)
+        .eq("user_uuid", session.user.id)
         .eq("words.letter_pair", letter_pair)
         .overrideTypes<Array<{
             id: number
@@ -71,15 +71,15 @@ export async function DELETE(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const user = await supabase.auth.getUser()
-    if (!user || !user.data.user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
     const res = await supabase
         .from('user_word')
         .delete()
-        .eq("user_uuid", user.data.user.id)
+        .eq("user_uuid", session.user.id)
         .eq("id", userWord.id)
         .eq("word_id", userWord.word.id)
         .select()
