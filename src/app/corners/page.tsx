@@ -46,21 +46,21 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
 
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} algorithmUsed={{algorithm: "x' R' D R' U2 R D' R' U2 R2 x", type: 'corner'}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
+                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
                 </List>
             </Stack>
             <StatsCard type="Corner">

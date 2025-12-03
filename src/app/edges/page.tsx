@@ -46,21 +46,21 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
 
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} algorithmUsed={{ algorithm: "R2' U: [R2, S]", type: 'edge' }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} algorithmUsed={{ algorithm: "(U M U M')2", type: 'edge' }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
+                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
                 </List>
             </Stack>
             <StatsCard type="Edge">

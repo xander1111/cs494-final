@@ -19,13 +19,15 @@ import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
-export function CaseCard(props: { type: string, case: Case, algorithmUsed?: Algorithm, userAlgorithm?: UserAlgorithm, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { type: string, case: Case, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const user = useUser();
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [algorithms, setAlgorithms] = useState<Algorithm[] | undefined>()
     const [enteredAlg, setEnteredAlg] = useState<string>("")
-
+    const [algorithmUsed, setAlgorithmUsed] = useState<Algorithm | undefined>()
+    const [userAlg, setUserAlg] = useState<UserAlgorithm | undefined>()
+    const [loadingAlgUsed, setLoadingAlgUsed] = useState<boolean>(true)
 
     function loadAlgorithms() {
         if (!algorithms) {
@@ -52,27 +54,57 @@ export function CaseCard(props: { type: string, case: Case, algorithmUsed?: Algo
             body: JSON.stringify({ algorithm: alg })
         })
 
-        const data = await fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+        const data = await fetch(`/api/algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
         const newAlgs = await data.json() as { algorithms: Algorithm[] }
         setAlgorithms(newAlgs.algorithms)
     }
 
     async function setUsedAlg(usedAlg: Algorithm) {
+        async function updateUsedAlgs() {
+            setLoadingAlgUsed(true)
+            const res = await fetch(`/api/user_algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const data = await res.json()
+
+            console.log(data)
+            setUserAlg(data.userAlgorithm)
+            setAlgorithmUsed(data.userAlgorithm.alg)
+            setLoadingAlgUsed(false)
+        }
+
         if (!user.user) {
             return
         }
 
-        const userAlg = {
-            id: props.userAlgorithm?.id,
-            alg_id: usedAlg.id!,  // id shouldn't be undefined since we should only call this function with Algorithms gotten from the database
+        const newUserAlg = {
+            id: userAlg?.id,
+            alg: usedAlg,
             user_uuid: user.user.id
         } as UserAlgorithm
 
-        await fetch('/api/user_algorithm', {
+        const res = await fetch('/api/user_algorithm', {
             method: 'POST',
-            body: JSON.stringify({ userAlgorithm: userAlg })
+            body: JSON.stringify({ userAlgorithm: newUserAlg })
         })
+        const data = await res.json()
+
+        setUserAlg(data.userAlgorithm)
+        updateUsedAlgs()
     }
+
+    useEffect(() => {
+        async function updateUsedAlgs() {
+            setLoadingAlgUsed(true)
+            const res = await fetch(`/api/user_algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const data = await res.json()
+
+            console.log(data)
+            setUserAlg(data.userAlgorithm)
+            setAlgorithmUsed(data.userAlgorithm.alg)
+            setLoadingAlgUsed(false)
+        }
+
+        updateUsedAlgs()
+    }, [])
 
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
@@ -82,20 +114,26 @@ export function CaseCard(props: { type: string, case: Case, algorithmUsed?: Algo
                     <Stack alignItems='flex-start'>
                         <Typography variant='cardHeader' color={props.color}>{props.case.target_a}{props.case.target_b}</Typography>
                         {/* TODO add/display category chip */}
-                        <Tooltip title="Edit algorithm">
-                            <Typography
-                                variant='cardSubheader'
-                                color='common.black'
-                                textAlign='center'
-                                sx={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                    setExpanded(!expanded)
-                                    loadAlgorithms()
-                                }}
-                            >
-                                {props.algorithmUsed?.algorithm} <EditIcon sx={{ fontSize: 'inherit' }} />
-                            </Typography>
-                        </Tooltip>
+                        {
+                            loadingAlgUsed ?
+                                <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
+                                :
+                                <Tooltip title="Edit algorithm">
+                                    <Typography
+                                        variant='cardSubheader'
+                                        color='common.black'
+                                        textAlign='center'
+                                        sx={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            setExpanded(!expanded)
+                                            loadAlgorithms()
+                                        }}
+                                    >
+                                        {algorithmUsed?.algorithm ?? "No algorithm set"} <EditIcon sx={{ fontSize: 'inherit' }} />
+                                    </Typography>
+                                </Tooltip>
+                        }
+
                     </Stack>
                     <Stack spacing={0}>
                         <Tooltip title="Mark as learned">
