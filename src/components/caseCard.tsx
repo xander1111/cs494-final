@@ -10,22 +10,46 @@ import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
 import { Algorithm } from "@/types/algorithm";
+import { Case } from "@/types/case";
 
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
-export function CaseCard(props: { type: string, case: string, algorithm: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { type: string, case: Case, algorithmUsed: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const [expanded, setExpanded] = useState<boolean>(false);
     const [algorithms, setAlgorithms] = useState<Algorithm[] | undefined>()
+    const [enteredAlg, setEnteredAlg] = useState<string>("")
 
 
     function loadAlgorithms() {
         if (!algorithms) {
-            fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case[0]}&target_b=${props.case[1]}`)
+            fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
                 .then(data => data.json())
                 .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
         }
+    }
+
+    async function submitAlgorithm() {
+        if (!enteredAlg)
+            return
+
+        const alg = {
+            algorithm: enteredAlg,
+            type: props.type,
+            case: props.case
+        } as Algorithm
+
+        setEnteredAlg("")
+
+        await fetch('/api/algorithm', {
+            method: 'POST',
+            body: JSON.stringify({ algorithm: alg })
+        })
+
+        const data = await fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+        const newAlgs = await data.json() as { algorithms: Algorithm[] }
+        setAlgorithms(newAlgs.algorithms)
     }
 
     return (
@@ -34,7 +58,7 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
 
                 <Stack direction='row' justifyContent='space-between' spacing={2} width='100%' >
                     <Stack alignItems='flex-start'>
-                        <Typography variant='cardHeader' color={props.color}>{props.case}</Typography>
+                        <Typography variant='cardHeader' color={props.color}>{props.case.target_a}{props.case.target_b}</Typography>
                         {/* TODO add/display category chip */}
                         <Tooltip title="Edit algorithm">
                             <Typography
@@ -47,7 +71,7 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
                                     loadAlgorithms()
                                 }}
                             >
-                                {props.algorithm} <EditIcon sx={{ fontSize: 'inherit' }} />
+                                {props.algorithmUsed} <EditIcon sx={{ fontSize: 'inherit' }} />
                             </Typography>
                         </Tooltip>
                     </Stack>
@@ -62,9 +86,9 @@ export function CaseCard(props: { type: string, case: string, algorithm: string,
                     <Stack direction='column' spacing={2} width='100%'>
                         <StyledDivider />
                         <Stack direction='row' spacing={2}>
-                            <StyledTextField label="Add an algorithm" type='text' onChange={() => { }} color={props.color} />
+                            <StyledTextField label="Add an algorithm" type='text' value={enteredAlg} onChange={e => { setEnteredAlg(e.target.value) }} color={props.color} />
                             <Tooltip title="Add algorithm">
-                                <IconButton>
+                                <IconButton onClick={submitAlgorithm}>
                                     <AddIcon color={props.color} />
                                 </IconButton>
                             </Tooltip>

@@ -1,5 +1,5 @@
 export type Word = {
-    id: number,
+    id?: number,
     letter_pair: string,
     word: string,
 }

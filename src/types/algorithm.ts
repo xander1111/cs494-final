@@ -1,7 +1,7 @@
 import { Case } from "@/types/case"
 
 export type Algorithm = {
-    id: number,
+    id?: number,
     algorithm: string,
     type: string,
     case?: Case,

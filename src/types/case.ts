@@ -1,6 +1,6 @@
 export type Case = {
-    id: number,
+    id?: number,
     buffer: string,
     target_a: string,
-    target_b: string,
+    target_b?: string,
 }
