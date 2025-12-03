@@ -53,8 +53,6 @@ export async function GET(req: NextRequest) {
         return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
     }
 
-    // return Response.json({ userAlgorithm: res.data })
-
     if (res.data.length === 0) {
         return Response.json({ userAlgorithm: {} })
     }
@@ -115,6 +113,4 @@ export async function POST(req: NextRequest) {
     }
 
     return Response.json({ message: "Success", userAlgorithm: res.data[0] as UserAlgorithm })
-
-    // TODO also mark this word as used
 }

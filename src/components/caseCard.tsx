@@ -97,7 +97,6 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
             const res = await fetch(`/api/user_algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
             const data = await res.json()
 
-            console.log(data)
             setUserAlg(data.userAlgorithm)
             setAlgorithmUsed(data.userAlgorithm.alg)
             setLoadingAlgUsed(false)

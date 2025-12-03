@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Collapse, CircularProgress, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -7,15 +7,21 @@ import AddIcon from '@mui/icons-material/Add';
 import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined';
 
 import { Word } from "@/types/word";
+import { UserWord } from "@/types/userWord";
+import { useUser } from "@/contexts/userContext";
 
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
 export function LetterPairCard(props: { letterPair: string, words: string[], color: 'primary' | 'secondary' | 'error' | 'success' }) {
+    const user = useUser();
+
     const [expanded, setExpanded] = useState<boolean>(false);
     const [words, setWords] = useState<Word[] | undefined>()
     const [enteredWord, setEnteredWord] = useState<string>("")
+    // const [wordsUsed, setWordsUsed] = useState<Word[] | undefined>()
+    const [userWords, setUserWords] = useState<UserWord[] | undefined>()
 
 
     function loadWords() {
@@ -47,6 +53,71 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
         setWords(newWords.words)
     }
 
+    async function removeUsedWord(word: UserWord) {
+        async function updateUsedWords() {
+            setUserWords(undefined)
+
+            const res = await fetch(`/api/user_word?letter_pair=${props.letterPair}`)
+            const data = await res.json()
+
+            console.log(data)
+            setUserWords(data.userWords)
+        }
+
+        if (!user.user) {
+            return
+        }
+
+        await fetch('/api/user_word', {
+            method: 'DELETE',
+            body: JSON.stringify({ userWord: word })
+        })
+
+        updateUsedWords()
+    }
+
+    async function addUsedWord(word: Word) {
+        async function updateUsedWords() {
+            setUserWords(undefined)
+
+            const res = await fetch(`/api/user_word?letter_pair=${props.letterPair}`)
+            const data = await res.json()
+
+            console.log(data)
+            setUserWords(data.userWords)
+        }
+
+        if (!user.user) {
+            return
+        }
+
+        const newUserWord = {
+            word: word,
+            user_uuid: user.user.id,
+        } as UserWord
+
+        await fetch('/api/user_word', {
+            method: 'POST',
+            body: JSON.stringify({ userWord: newUserWord })
+        })
+
+        updateUsedWords()
+    }
+
+    useEffect(() => {
+        async function updateUsedWords() {
+            setUserWords(undefined)
+
+            const res = await fetch(`/api/user_word?letter_pair=${props.letterPair}`)
+            const data = await res.json()
+
+            console.log(data)
+            setUserWords(data.userWords)
+        }
+
+        updateUsedWords()
+    }, [])
+
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
             <Stack direction='column' spacing={2}>
@@ -54,20 +125,32 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                 <Stack direction='row' justifyContent='space-between' spacing={2} width='100%' >
                     <Stack alignItems='flex-start'>
                         <Typography variant="cardHeader" color={props.color}>{props.letterPair}</Typography>
-                        <Tooltip title="Edit words">
-                            <Typography
-                                variant='cardSubheader'
-                                color='common.black'
-                                textAlign='center'
-                                sx={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                    setExpanded(!expanded)
-                                    loadWords()
-                                }}
-                            >
-                                {props.words.join(", ")} <EditIcon sx={{ fontSize: 'inherit' }} />
-                            </Typography>
-                        </Tooltip>
+
+                        {
+                            userWords ?
+                                <Tooltip title="Edit words">
+                                    <Typography
+                                        variant='cardSubheader'
+                                        color='common.black'
+                                        textAlign='center'
+                                        sx={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            setExpanded(!expanded)
+                                            loadWords()
+                                        }}
+                                    >
+                                        {
+                                            userWords.length > 0 ?
+                                                userWords.map(userWord => userWord.word.word).join(", ")
+                                                :
+                                                "No words added"
+                                        } <EditIcon sx={{ fontSize: 'inherit' }} />
+                                    </Typography>
+                                </Tooltip>
+                                :
+                                <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
+                        }
+
                     </Stack>
                 </Stack>
 
@@ -77,23 +160,21 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                         <Stack direction='row' width='100%' spacing={2} alignItems='stretch'>
                             <Stack direction='column' spacing={2} width='100%'>
                                 <Stack direction='column' spacing={2}>
-                                    <Typography variant='cardSubheader'>
-                                        Example word 1
-                                        <Tooltip title="Remove word">
-                                            <IconButton>
-                                                <BackspaceOutlinedIcon color='error' />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Typography>
-
-                                    <Typography variant='cardSubheader'>
-                                        Example word 2
-                                        <Tooltip title="Remove word">
-                                            <IconButton>
-                                                <BackspaceOutlinedIcon color='error' />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Typography>
+                                    {
+                                        userWords ?
+                                            userWords.map((userWord, i) => (
+                                                <Typography key={i} variant='cardSubheader'>
+                                                    {userWord.word.word}
+                                                    <Tooltip title="Remove word">
+                                                        <IconButton onClick={() => { removeUsedWord(userWord) }}>
+                                                            <BackspaceOutlinedIcon color='error' />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Typography>
+                                            ))
+                                            :
+                                            <CircularProgress color={props.color} />
+                                    }
                                 </Stack>
 
                             </Stack>
@@ -115,7 +196,7 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                                             <Typography key={i} variant='cardSubheader'>
                                                 {word.word}
                                                 <Tooltip title="Add word">
-                                                    <IconButton>
+                                                    <IconButton onClick={() => { addUsedWord(word) }}>
                                                         <AddIcon color='success' />
                                                     </IconButton>
                                                 </Tooltip>
