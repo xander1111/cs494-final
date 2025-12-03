@@ -72,17 +72,17 @@ export default function Home() {
             </Stack>
 
             <StatsCard type="Corner">
-                {/* TODO get categories from DB */}
-                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} color='error' />
-                <StatLine category="U-Up, D-Side" numericCompletion="x/y" percentCompletion={12} color='success' />
-                <StatLine category="U-Up, D-Down" numericCompletion="x/y" percentCompletion={34} color='success' />
-                <StatLine category="D-Down, D-Down" numericCompletion="x/y" percentCompletion={56} color='success' />
-                <StatLine category="D-Side, D-Side" numericCompletion="x/y" percentCompletion={78} color='secondary' />
-                <StatLine category="LFU/BRU, D-Any" numericCompletion="x/y" percentCompletion={90} color='secondary' />
-                <StatLine category="U-Side, D-Any" numericCompletion="x/y" percentCompletion={12} color='secondary' />
-                <StatLine category="D-Side, D-Down" numericCompletion="x/y" percentCompletion={23} color='secondary' />
-                <StatLine category="U-Any, U-Any" numericCompletion="x/y" percentCompletion={34} color='primary' />
-                <StatLine category="Special" numericCompletion="x/y" percentCompletion={45} color='primary' />
+                {/* TODO get categories from util */}
+                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} />
+                <StatLine category="U-Up, D-Side" numericCompletion="x/y" percentCompletion={12} />
+                <StatLine category="U-Up, D-Down" numericCompletion="x/y" percentCompletion={34} />
+                <StatLine category="D-Down, D-Down" numericCompletion="x/y" percentCompletion={56} />
+                <StatLine category="D-Side, D-Side" numericCompletion="x/y" percentCompletion={78} />
+                <StatLine category="LFU/BRU, D-Any" numericCompletion="x/y" percentCompletion={90} />
+                <StatLine category="U-Side, D-Any" numericCompletion="x/y" percentCompletion={12} />
+                <StatLine category="D-Side, D-Down" numericCompletion="x/y" percentCompletion={23} />
+                <StatLine category="U-Any, U-Any" numericCompletion="x/y" percentCompletion={34} />
+                <StatLine category="Special" numericCompletion="x/y" percentCompletion={45} />
             </StatsCard>
 
         </Stack>

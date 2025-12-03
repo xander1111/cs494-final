@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
                 buffer,
                 target_a,
                 target_b,
-                type
+                type,
+                category
         `)
         .eq("type", type)
 

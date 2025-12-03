@@ -2,10 +2,14 @@ import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 
 import { CategoryChip } from "@/components/categoryChip";
 
-export function StatLine(props: { category: string, numericCompletion: string, percentCompletion: number, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+import { getColorForCategory } from "@/utils/categoryUtils";
+
+export function StatLine(props: { category: string, numericCompletion: string, percentCompletion: number }) {
+    const color = getColorForCategory(props.category)
+
     return (
         <Stack direction='row' justifyContent='space-between' width='100%' >
-            <CategoryChip category={props.category} color={props.color} />
+            <CategoryChip category={props.category} />
             <Stack direction='row' justifyContent='flex-end' spacing={2} width='25%' >
                 <Typography variant="cardSubheader" color='common.black' textAlign='center' whiteSpace='nowrap'>{props.numericCompletion}</Typography>
                 <Box display='flex' justifyContent='center' alignItems='center' width='80%' height='80%'>
@@ -13,7 +17,7 @@ export function StatLine(props: { category: string, numericCompletion: string, p
                         enableTrackSlot
                         size='100%'
                         variant='determinate'
-                        color={props.color}
+                        color={color}
                         value={props.percentCompletion}
                         sx={{
                             '& .MuiCircularProgress-track': {

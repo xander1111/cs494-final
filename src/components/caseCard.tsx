@@ -19,6 +19,7 @@ import { useUser } from "@/contexts/userContext";
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
+import { CategoryChip } from "@/components/categoryChip";
 
 export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const user = useUser();
@@ -157,12 +158,14 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
 
                 <Stack direction='row' justifyContent='space-between' spacing={2} width='100%' >
                     <Stack alignItems='flex-start'>
-                        <Typography variant='cardHeader' color={props.color}>{props.case.target_a}{props.case.target_b}</Typography>
-                        {/* TODO add/display category chip */}
+                        <Stack direction='row' spacing={2} >
+                            <Typography variant='cardHeader' color={props.color}>{props.case.target_a}{props.case.target_b}</Typography>
+                            <CategoryChip category={props.case.category} />
+                        </Stack>
                         {
                             user.user ?
                                 loadingAlgUsed ?
-                                    <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
+                                    <CircularProgress color={props.color} size='1.5rem' />
                                     :
                                     <Tooltip title="Edit algorithm">
                                         <Typography

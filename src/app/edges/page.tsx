@@ -72,17 +72,17 @@ export default function Home() {
             </Stack>
             <StatsCard type="Edge">
                 {/* TODO get categories from DB */}
-                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} color='error' />
-                <StatLine category="4 Move" numericCompletion="x/y" percentCompletion={12} color='success' />
-                <StatLine category="5 Move" numericCompletion="x/y" percentCompletion={34} color='success' />
-                <StatLine category="M-Swap" numericCompletion="x/y" percentCompletion={56} color='secondary' />
-                <StatLine category="U-Swap" numericCompletion="x/y" percentCompletion={78} color='secondary' />
-                <StatLine category="E-Swap" numericCompletion="x/y" percentCompletion={90} color='secondary' />
-                <StatLine category="S-Swap" numericCompletion="x/y" percentCompletion={12} color='secondary' />
-                <StatLine category="F-Swap" numericCompletion="x/y" percentCompletion={23} color='secondary' />
-                <StatLine category="D-Swap" numericCompletion="x/y" percentCompletion={34} color='secondary' />
-                <StatLine category="S-Insert" numericCompletion="x/y" percentCompletion={45} color='secondary' />
-                <StatLine category="Algorithm" numericCompletion="x/y" percentCompletion={56} color='primary' />
+                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} />
+                <StatLine category="4 Move" numericCompletion="x/y" percentCompletion={12} />
+                <StatLine category="5 Move" numericCompletion="x/y" percentCompletion={34} />
+                <StatLine category="M-Swap" numericCompletion="x/y" percentCompletion={56} />
+                <StatLine category="U-Swap" numericCompletion="x/y" percentCompletion={78} />
+                <StatLine category="E-Swap" numericCompletion="x/y" percentCompletion={90} />
+                <StatLine category="S-Swap" numericCompletion="x/y" percentCompletion={12} />
+                <StatLine category="F-Swap" numericCompletion="x/y" percentCompletion={23} />
+                <StatLine category="D-Swap" numericCompletion="x/y" percentCompletion={34} />
+                <StatLine category="S-Insert" numericCompletion="x/y" percentCompletion={45} />
+                <StatLine category="Algorithm" numericCompletion="x/y" percentCompletion={56} />
             </StatsCard>
         </Stack>
     );

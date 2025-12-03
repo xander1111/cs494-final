@@ -1,6 +1,10 @@
 import { Card, Tooltip, Typography } from "@mui/material";
 
-export function CategoryChip(props: { category: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+import { getColorForCategory } from "@/utils/categoryUtils";
+
+export function CategoryChip(props: { category: string }) {
+    const color = getColorForCategory(props.category)
+
     return (
         <Tooltip title="Click to filter cases">
             <Card sx={{
@@ -10,10 +14,10 @@ export function CategoryChip(props: { category: string, color: 'primary' | 'seco
                 px: 2,
                 outline: 'solid',
                 outlineWidth: '0.15rem',
-                outlineColor: `${props.color}.main`,
+                outlineColor: `${color}.main`,
                 boxShadow: 'none',
             }}>
-                <Typography variant="cardSubheader" color={props.color} >{props.category}</Typography>
+                <Typography variant="cardSubheader" color={color} >{props.category}</Typography>
             </Card>
         </Tooltip>
     )
