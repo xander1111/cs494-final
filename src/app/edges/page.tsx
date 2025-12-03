@@ -46,6 +46,7 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
+                    {/* TODO get all cases from DB */}
                     <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
                     <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
 

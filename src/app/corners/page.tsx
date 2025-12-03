@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { List, MenuItem, Stack, Typography } from "@mui/material";
 
-
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
 import { CaseCard } from "@/components/caseCard";
@@ -46,35 +45,38 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    {/* TODO get all cases from DB */}
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
 
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 1, buffer: "C", target_a: "A", target_b: "B"}} color='secondary' />
-                    <CaseCard type='corner' case={{id: 2, buffer: "C", target_a: "D", target_b: "G"}} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='secondary' />
+                    <CaseCard type='corner' case={{ id: 2, buffer: "C", target_a: "D", target_b: "G" }} color='secondary' />
                 </List>
             </Stack>
+
             <StatsCard type="Corner">
-                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} color='error'/>
-                <StatLine category="U-Up, D-Side" numericCompletion="x/y" percentCompletion={12} color='success'/>
-                <StatLine category="U-Up, D-Down" numericCompletion="x/y" percentCompletion={34} color='success'/>
-                <StatLine category="D-Down, D-Down" numericCompletion="x/y" percentCompletion={56} color='success'/>
-                <StatLine category="D-Side, D-Side" numericCompletion="x/y" percentCompletion={78} color='secondary'/>
-                <StatLine category="LFU/BRU, D-Any" numericCompletion="x/y" percentCompletion={90} color='secondary'/>
-                <StatLine category="U-Side, D-Any" numericCompletion="x/y" percentCompletion={12} color='secondary'/>
-                <StatLine category="D-Side, D-Down" numericCompletion="x/y" percentCompletion={23} color='secondary'/>
-                <StatLine category="U-Any, U-Any" numericCompletion="x/y" percentCompletion={34} color='primary'/>
-                <StatLine category="Special" numericCompletion="x/y" percentCompletion={45} color='primary'/>
+                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} color='error' />
+                <StatLine category="U-Up, D-Side" numericCompletion="x/y" percentCompletion={12} color='success' />
+                <StatLine category="U-Up, D-Down" numericCompletion="x/y" percentCompletion={34} color='success' />
+                <StatLine category="D-Down, D-Down" numericCompletion="x/y" percentCompletion={56} color='success' />
+                <StatLine category="D-Side, D-Side" numericCompletion="x/y" percentCompletion={78} color='secondary' />
+                <StatLine category="LFU/BRU, D-Any" numericCompletion="x/y" percentCompletion={90} color='secondary' />
+                <StatLine category="U-Side, D-Any" numericCompletion="x/y" percentCompletion={12} color='secondary' />
+                <StatLine category="D-Side, D-Down" numericCompletion="x/y" percentCompletion={23} color='secondary' />
+                <StatLine category="U-Any, U-Any" numericCompletion="x/y" percentCompletion={34} color='primary' />
+                <StatLine category="Special" numericCompletion="x/y" percentCompletion={45} color='primary' />
             </StatsCard>
+
         </Stack>
     );
 }

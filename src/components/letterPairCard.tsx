@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 
 import { Collapse, CircularProgress, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -119,6 +120,10 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
             setUserWords(data.userWords)
         }
 
+        if (!user.user) {
+            return  // Don't make API calls that require the user to be logged in
+        }
+
         updateUsedWords()
     }, [])
 
@@ -131,8 +136,31 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                         <Typography variant="cardHeader" color={props.color}>{props.letterPair}</Typography>
 
                         {
-                            userWords ?
-                                <Tooltip title="Edit words">
+                            user.user ?
+                                userWords ?
+                                    <Tooltip title="Edit words">
+                                        <Typography
+                                            variant='cardSubheader'
+                                            color='common.black'
+                                            textAlign='center'
+                                            sx={{ cursor: 'pointer' }}
+                                            onClick={() => {
+                                                setExpanded(!expanded)
+                                                loadWords()
+                                            }}
+                                        >
+                                            {
+                                                userWords.length > 0 ?
+                                                    userWords.map(userWord => userWord.word.word).join(", ")
+                                                    :
+                                                    "No words added"
+                                            } <EditIcon sx={{ fontSize: 'inherit' }} />
+                                        </Typography>
+                                    </Tooltip>
+                                    :
+                                    <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
+                                :
+                                <Tooltip title="View words">
                                     <Typography
                                         variant='cardSubheader'
                                         color='common.black'
@@ -143,16 +171,9 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                                             loadWords()
                                         }}
                                     >
-                                        {
-                                            userWords.length > 0 ?
-                                                userWords.map(userWord => userWord.word.word).join(", ")
-                                                :
-                                                "No words added"
-                                        } <EditIcon sx={{ fontSize: 'inherit' }} />
+                                        View words
                                     </Typography>
                                 </Tooltip>
-                                :
-                                <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
                         }
 
                     </Stack>
@@ -161,65 +182,98 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                 <Collapse in={expanded} timeout='auto' sx={{ width: '100%' }} unmountOnExit>
                     <Stack direction='column' width='100%' spacing={2}>
                         <StyledDivider />
-                        <Stack direction='row' width='100%' spacing={2} alignItems='stretch'>
-                            <Stack direction='column' spacing={2} width='100%'>
-                                <Stack direction='column' spacing={2}>
-                                    {
-                                        userWords ?
-                                            userWords.map((userWord, i) => (
-                                                <Typography key={i} variant='cardSubheader'>
-                                                    {userWord.word.word}
-                                                    <Tooltip title="Remove word">
-                                                        <IconButton onClick={() => { removeUsedWord(userWord) }}>
-                                                            <BackspaceOutlinedIcon color='error' />
-                                                        </IconButton>
-                                                    </Tooltip>
+                        {
+                            user.user ?
+                                <Stack direction='row' width='100%' spacing={2} alignItems='stretch'>
+                                    <Stack direction='column' spacing={2} width='100%'>
+                                        <Stack direction='column' spacing={2}>
+                                            {
+                                                userWords ?
+                                                    userWords.map((userWord, i) => (
+                                                        <Typography key={i} variant='cardSubheader'>
+                                                            {userWord.word.word}
+                                                            <Tooltip title="Remove word">
+                                                                <IconButton onClick={() => { removeUsedWord(userWord) }}>
+                                                                    <BackspaceOutlinedIcon color='error' />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </Typography>
+                                                    ))
+                                                    :
+                                                    <CircularProgress color={props.color} />
+                                            }
+                                        </Stack>
+
+                                    </Stack>
+
+                                    <StyledDivider orientation='vertical' flexItem />
+
+                                    <Stack direction='column' spacing={2} width='100%'>
+                                        <Stack direction='row' spacing={2}>
+                                            <StyledTextField
+                                                label="Add a word"
+                                                type='text'
+                                                value={enteredWord}
+                                                error={!validInput}
+                                                helperText={getHelperText}
+                                                onChange={e => { setEnteredWord(e.target.value) }}
+                                                color={props.color}
+                                            />
+                                            <Tooltip title="Add word">
+                                                <IconButton onClick={submitWord}>
+                                                    <AddIcon color='success' />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Stack>
+                                        {
+                                            words ?
+                                                words.map((word, i) => (
+                                                    <Typography key={i} variant='cardSubheader'>
+                                                        {word.word}
+                                                        <Tooltip title="Add word">
+                                                            <IconButton onClick={() => { addUsedWord(word) }}>
+                                                                <AddIcon color='success' />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    </Typography>
+
+                                                ))
+                                                :
+                                                <CircularProgress color={props.color} />
+                                        }
+                                    </Stack>
+                                </Stack>
+                                :
+                                <Stack spacing={2}>
+                                    <Stack spacing={1}>
+                                        <Tooltip title="Click to log in">
+                                            <Link href='/login' style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                <Typography>
+                                                    Log in to set what algorithm you use, or add a new one
                                                 </Typography>
-                                            ))
-                                            :
-                                            <CircularProgress color={props.color} />
-                                    }
+                                            </Link>
+                                        </Tooltip>
+                                        <StyledDivider />
+                                    </Stack>
+
+                                    <Stack spacing={2}>
+                                        {
+                                            words ?
+                                                words.map((word, i) => (
+                                                    <Tooltip key={i} title="Log in to select words">
+                                                        <Link href='/login' style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                            <Typography variant='cardSubheader'>
+                                                                {word.word}
+                                                            </Typography>
+                                                        </Link>
+                                                    </Tooltip>
+                                                ))
+                                                :
+                                                <CircularProgress color={props.color} />
+                                        }
+                                    </Stack>
                                 </Stack>
-
-                            </Stack>
-
-                            <StyledDivider orientation='vertical' flexItem />
-
-                            <Stack direction='column' spacing={2} width='100%'>
-                                <Stack direction='row' spacing={2}>
-                                    <StyledTextField
-                                        label="Add a word"
-                                        type='text'
-                                        value={enteredWord}
-                                        error={!validInput}
-                                        helperText={getHelperText}
-                                        onChange={e => { setEnteredWord(e.target.value) }}
-                                        color={props.color}
-                                    />
-                                    <Tooltip title="Add word">
-                                        <IconButton onClick={submitWord}>
-                                            <AddIcon color='success' />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Stack>
-                                {
-                                    words ?
-                                        words.map((word, i) => (
-                                            <Typography key={i} variant='cardSubheader'>
-                                                {word.word}
-                                                <Tooltip title="Add word">
-                                                    <IconButton onClick={() => { addUsedWord(word) }}>
-                                                        <AddIcon color='success' />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Typography>
-
-                                        ))
-                                        :
-                                        <CircularProgress color={props.color} />
-                                }
-                            </Stack>
-                        </Stack>
+                        }
                     </Stack>
                 </Collapse>
 

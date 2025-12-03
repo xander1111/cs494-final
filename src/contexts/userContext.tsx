@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation"
 
@@ -19,6 +19,14 @@ const UserContext = createContext<UserProps | undefined>(undefined)
 export function UserProvider(props: { user: User | undefined, children: React.ReactNode }) {
     const router = useRouter()
     const [user, setUser] = useState<User | undefined>(props.user)
+
+    useEffect(() => {
+        async function updateUser() {
+            setUser(props.user)
+        }
+
+        updateUser()
+    }, [props.user])
 
     async function signOut() {
         await fetch('/api/signOut')

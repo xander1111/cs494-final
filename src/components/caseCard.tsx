@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import { Checkbox, CircularProgress, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -143,6 +144,10 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
             setLearned(data.learned)
         }
 
+        if (!user.user) {
+            return  // Don't make API calls that require the user to be logged in
+        }
+
         updateUsedAlgs()
         loadLearned()
     }, [])
@@ -156,10 +161,26 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
                         <Typography variant='cardHeader' color={props.color}>{props.case.target_a}{props.case.target_b}</Typography>
                         {/* TODO add/display category chip */}
                         {
-                            loadingAlgUsed ?
-                                <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
+                            user.user ?
+                                loadingAlgUsed ?
+                                    <CircularProgress color={props.color} size='100%' sx={{ height: '100%', width: '100%' }} />
+                                    :
+                                    <Tooltip title="Edit algorithm">
+                                        <Typography
+                                            variant='cardSubheader'
+                                            color='common.black'
+                                            textAlign='center'
+                                            sx={{ cursor: 'pointer' }}
+                                            onClick={() => {
+                                                setExpanded(!expanded)
+                                                loadAlgorithms()
+                                            }}
+                                        >
+                                            {algorithmUsed?.algorithm ?? "No algorithm set"} <EditIcon sx={{ fontSize: 'inherit' }} />
+                                        </Typography>
+                                    </Tooltip>
                                 :
-                                <Tooltip title="Edit algorithm">
+                                <Tooltip title="View algorithms">
                                     <Typography
                                         variant='cardSubheader'
                                         color='common.black'
@@ -170,56 +191,89 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
                                             loadAlgorithms()
                                         }}
                                     >
-                                        {algorithmUsed?.algorithm ?? "No algorithm set"} <EditIcon sx={{ fontSize: 'inherit' }} />
+                                        View algorothms
                                     </Typography>
+
                                 </Tooltip>
                         }
-
                     </Stack>
                     <Stack spacing={0}>
                         {
-                            learned == undefined ?
-                                <CircularProgress color={props.color} />
+                            user.user ?
+                                learned == undefined ?
+                                    <CircularProgress color={props.color} />
+                                    :
+                                    <Tooltip title="Mark as learned">
+                                        <Checkbox
+                                            color={props.color}
+                                            icon={<SchoolOutlinedIcon />}
+                                            checkedIcon={<SchoolIcon />}
+                                            checked={learned}
+                                            onClick={toggleLearned}
+                                        />
+                                    </Tooltip>
                                 :
-                                <Tooltip title="Mark as learned">
-                                    <Checkbox
-                                        color={props.color}
-                                        icon={<SchoolOutlinedIcon />}
-                                        checkedIcon={<SchoolIcon />}
-                                        checked={learned}
-                                        onClick={toggleLearned}
-                                    />
+                                <Tooltip title="Log in to mark as learned">
+                                    <Link href='/login'>
+                                        <Checkbox
+                                            color={props.color}
+                                            icon={<SchoolOutlinedIcon />}
+                                            checkedIcon={<SchoolIcon />}
+                                            checked={false}
+                                        />
+                                    </Link>
                                 </Tooltip>
                         }
-
                     </Stack>
                 </Stack>
 
                 <Collapse in={expanded} timeout='auto' sx={{ width: '100%' }} unmountOnExit>
                     <Stack direction='column' spacing={2} width='100%'>
                         <StyledDivider />
-                        <Stack direction='row' spacing={2}>
-                            <StyledTextField
-                                label="Add an algorithm"
-                                type='text'
-                                value={enteredAlg}
-                                error={!validInput}
-                                helperText={getHelperText}
-                                onChange={e => { setEnteredAlg(e.target.value) }}
-                                color={props.color}
-                            />
-                            <Tooltip title="Add algorithm">
-                                <IconButton onClick={submitAlgorithm}>
-                                    <AddIcon color={props.color} />
-                                </IconButton>
-                            </Tooltip>
-                        </Stack>
+                        {
+                            user.user ?
+                                <Stack direction='row' spacing={2}>
+                                    <StyledTextField
+                                        label="Add an algorithm"
+                                        type='text'
+                                        value={enteredAlg}
+                                        error={!validInput}
+                                        helperText={getHelperText}
+                                        onChange={e => { setEnteredAlg(e.target.value) }}
+                                        color={props.color}
+                                    />
+                                    <Tooltip title="Add algorithm">
+                                        <IconButton onClick={submitAlgorithm}>
+                                            <AddIcon color={props.color} />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Stack>
+                                :
+                                <Stack>
+                                    <Tooltip title="Click to log in">
+                                        <Link href='/login' style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Typography>
+                                                Log in to set what algorithm you use, or add a new one
+                                            </Typography>
+                                        </Link>
+                                    </Tooltip>
+
+                                    <StyledDivider />
+                                </Stack>
+                        }
                         {
                             algorithms ?
                                 algorithms.map((alg, i) => (
-                                    <Tooltip key={i} title="Click to select this algorithm" onClick={() => { setUsedAlg(alg) }}>
-                                        <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
-                                    </Tooltip>
+                                    user.user ?
+                                        <Tooltip key={i} title={"Click to select this algorithm"} onClick={() => { setUsedAlg(alg) }}>
+                                            <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
+                                        </Tooltip>
+                                        :
+                                        <Tooltip key={i} title={"Log in to select an algorithm"}>
+                                            <Link href='/login' style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
+                                            </Link>
+                                        </Tooltip>
                                 ))
                                 :
                                 <CircularProgress color={props.color} />
