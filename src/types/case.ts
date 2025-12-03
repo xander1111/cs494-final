@@ -3,4 +3,5 @@ export type Case = {
     buffer: string,
     target_a: string,
     target_b?: string,
+    type: string,
 }

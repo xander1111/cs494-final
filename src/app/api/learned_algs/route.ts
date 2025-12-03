@@ -26,11 +26,10 @@ export async function GET(req: NextRequest) {
                 id,
                 user_uuid,
                 case_id,
-                type,
-                cases!inner ( id, buffer, target_a, target_b )
+                cases!inner ( id, buffer, target_a, target_b, type )
         `)
         .eq("user_uuid", session.user.id)
-        .eq("type", type)
+        .eq("cases.type", type)
         .eq("cases.buffer", buffer)
         .eq("cases.target_a", target_a)
         .eq("cases.target_b", target_b)
@@ -73,18 +72,18 @@ export async function POST(req: NextRequest) {
             id,
             user_uuid,
             case_id,
-            type
+            cases!inner ( id, type )
         `)
         .eq("user_uuid", session.user.id)
         .eq("case_id", cs.id)
-        .eq("type", type)
+        .eq("cases.type", type)
 
     if (findExisting.error) {
-        return Response.json({ message: `An error occured while retrieving learned status of case ${cs.id}, type '${type}' in the database`, error: findExisting.error })
+        return Response.json({ message: `An error occured while retrieving learned status of case ${cs.id} in the database`, error: findExisting.error })
     }
 
     if (findExisting.data.length > 0) {
-        return Response.json({ message: `Case ${cs.id}, type '${type}' already marked as learned` })
+        return Response.json({ message: `Case ${cs.id} already marked as learned` })
     }
 
     const res = await supabase
@@ -92,12 +91,11 @@ export async function POST(req: NextRequest) {
         .insert({
             user_uuid: session.user.id,
             case_id: cs.id,
-            type: type,
         })
         .select()
 
     if (res.error) {
-        return Response.json({ message: `An error occured while adding learned status of case ${cs.id}, type '${type}' in the database`, error: res.error })
+        return Response.json({ message: `An error occured while adding learned status of case ${cs.id} in the database`, error: res.error })
     }
 
     return Response.json({ message: "Success", learnedRow: res.data[0] })
@@ -130,18 +128,18 @@ export async function DELETE(req: NextRequest) {
             id,
             user_uuid,
             case_id,
-            type
+            cases!inner ( id, type )
         `)
         .eq("user_uuid", session.user.id)
         .eq("case_id", cs.id)
-        .eq("type", type)
+        .eq("cases.type", type)
 
     if (findExisting.error) {
-        return Response.json({ message: `An error occured while retrieving learned status of case ${cs.id}, type '${type}' in the database`, error: findExisting.error })
+        return Response.json({ message: `An error occured while retrieving learned status of case ${cs.id} in the database`, error: findExisting.error })
     }
 
     if (findExisting.data.length == 0) {
-        return Response.json({ message: `Case ${cs.id}, type '${type}' already marked as not learned` })
+        return Response.json({ message: `Case ${cs.id} already marked as not learned` })
     }
 
     const res = await supabase
@@ -149,11 +147,11 @@ export async function DELETE(req: NextRequest) {
         .delete()
         .eq("user_uuid", session.user.id)
         .eq("id", findExisting.data[0].id)
-        .eq("type", type)
+        .eq("case_id", cs.id)
         .select()
 
     if (res.error) {
-        return Response.json({ message: `An error occured while adding learned status of case ${cs.id}, type '${type}' in the database`, error: res.error })
+        return Response.json({ message: `An error occured while adding learned status of case ${cs.id} in the database`, error: res.error })
     }
 
     return Response.json({ message: "Success", rowsDeleted: res.data })

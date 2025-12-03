@@ -27,14 +27,13 @@ export async function GET(req: NextRequest) {
         .select(`
             id,
             algorithm,
-            type,
-            cases!inner ( id, buffer, target_a, target_b ),
+            cases!inner ( id, buffer, target_a, target_b, type ),
             user_algorithm!inner (
                 id, alg_id, user_uuid
             )
         `)
-        .eq("type", type)
         .eq("user_algorithm.user_uuid", session.user.id)
+        .eq("cases.type", type)
         .eq("cases.buffer", buffer)
         .eq("cases.target_a", target_a)
         .eq("cases.target_b", target_b)
@@ -44,8 +43,7 @@ export async function GET(req: NextRequest) {
         .overrideTypes<Array<{
             id: number
             algorithm: string
-            type: string
-            cases: { id: number; buffer: string; target_a: string; target_b: string }
+            cases: { id: number; type: string; buffer: string; target_a: string; target_b: string }
             user_algorithm: Array<{ id: number; alg_id: string; user_uuid: string }>
         }>>()
 
@@ -59,6 +57,7 @@ export async function GET(req: NextRequest) {
 
     const cs = {
         id: res.data[0].cases.id,
+        type: res.data[0].cases.type,
         buffer: res.data[0].cases.buffer,
         target_a: res.data[0].cases.target_a,
         target_b: res.data[0].cases.target_b,
@@ -67,7 +66,6 @@ export async function GET(req: NextRequest) {
     const alg = {
         id: res.data[0].id,
         algorithm: res.data[0].algorithm,
-        type: res.data[0].type,
         case: cs,
     } as Algorithm
 

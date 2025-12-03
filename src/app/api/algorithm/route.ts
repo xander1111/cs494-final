@@ -22,12 +22,13 @@ export async function GET(req: NextRequest) {
             buffer,
             target_a,
             target_b,
-            algorithms ( id, algorithm, type )
+            type,
+            algorithms ( id, algorithm )
         `)
         .eq("buffer", buffer)
         .eq("target_a", target_a)
         .eq("target_b", target_b)
-        .eq("algorithms.type", type)
+        .eq("type", type)
 
     if (res.error) {
         return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
@@ -82,7 +83,6 @@ export async function POST(req: NextRequest) {
         .from('algorithms')
         .insert({
             algorithm: alg.algorithm,
-            type: alg.type,
             case_id: caseId
         })
         .select()

@@ -20,7 +20,7 @@ import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
-export function CaseCard(props: { type: string, case: Case, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const user = useUser();
 
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -36,7 +36,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
 
     function loadAlgorithms() {
         if (!algorithms) {
-            fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            fetch(`/api/algorithm?type=${props.case.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
                 .then(data => data.json())
                 .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
         }
@@ -51,7 +51,6 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
 
         const alg = {
             algorithm: enteredAlg,
-            type: props.type,
             case: props.case
         } as Algorithm
 
@@ -62,7 +61,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
             body: JSON.stringify({ algorithm: alg })
         })
 
-        const data = await fetch(`/api/algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+        const data = await fetch(`/api/algorithm?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
         const newAlgs = await data.json() as { algorithms: Algorithm[] }
         setAlgorithms(newAlgs.algorithms)
     }
@@ -70,7 +69,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
     async function setUsedAlg(usedAlg: Algorithm) {
         async function updateUsedAlgs() {
             setLoadingAlgUsed(true)
-            const res = await fetch(`/api/user_algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const res = await fetch(`/api/user_algorithm?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
             const data = await res.json()
 
             console.log(data)
@@ -101,7 +100,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
 
     async function toggleLearned() {
         async function loadLearned() {
-            const res = await fetch(`/api/learned_algs?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const res = await fetch(`/api/learned_algs?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
             const data = await res.json()
 
             setLearned(data.learned)
@@ -113,13 +112,13 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
             // Going from not learned to learned
             await fetch('/api/learned_algs', {
                 method: 'POST',
-                body: JSON.stringify({ case: props.case, type: props.type })
+                body: JSON.stringify({ case: props.case, type: props.case.type })
             })
         } else {
             // Going from learned to not learned
             await fetch('/api/learned_algs', {
                 method: 'DELETE',
-                body: JSON.stringify({ case: props.case, type: props.type })
+                body: JSON.stringify({ case: props.case, type: props.case.type })
             })
         }
 
@@ -129,7 +128,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
     useEffect(() => {
         async function updateUsedAlgs() {
             setLoadingAlgUsed(true)
-            const res = await fetch(`/api/user_algorithm?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const res = await fetch(`/api/user_algorithm?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
             const data = await res.json()
 
             setUserAlg(data.userAlgorithm)
@@ -138,7 +137,7 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
         }
 
         async function loadLearned() {
-            const res = await fetch(`/api/learned_algs?type=${props.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            const res = await fetch(`/api/learned_algs?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
             const data = await res.json()
 
             setLearned(data.learned)

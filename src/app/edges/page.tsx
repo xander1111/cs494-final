@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { List, MenuItem, Stack, Typography } from "@mui/material";
+import { CircularProgress, List, MenuItem, Stack, Typography } from "@mui/material";
 
+import { Case } from "@/types/case";
 
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
@@ -13,10 +14,23 @@ import { StatLine } from "@/components/statLine";
 
 
 export default function Home() {
+    const [cases, setCases] = useState<Case[] | undefined>()
+
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [filter, setFilter] = useState<string>("")
     const [sortBy, setSortBy] = useState<string>("alphabetical")
     const [ascending, setAscending] = useState<boolean>(false)
+
+    useEffect(() => {
+        async function getCases() {
+            const res = await fetch(`/api/cases?type=edge`)
+            const data = await res.json()
+
+            setCases(data.cases)
+        }
+
+        getCases()
+    }, [])
 
     return (
         <Stack direction='row' width='80%' height='calc(100vh - 4rem)' justifyContent='space-evenly'>
@@ -46,25 +60,18 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    {/* TODO get all cases from DB */}
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
-
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 1, buffer: "C", target_a: "A", target_b: "B" }} color='primary' />
-                    <CaseCard type='edge' case={{ id: 7, buffer: "C", target_a: "B", target_b: "S" }} color='primary' />
+                    {
+                        cases ?
+                            cases.map((cs, i) => (
+                                <CaseCard key={i} case={cs} color='primary' />
+                            ))
+                            :
+                            <CircularProgress color='primary' />
+                    }
                 </List>
             </Stack>
             <StatsCard type="Edge">
+                {/* TODO get categories from DB */}
                 <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} color='error' />
                 <StatLine category="4 Move" numericCompletion="x/y" percentCompletion={12} color='success' />
                 <StatLine category="5 Move" numericCompletion="x/y" percentCompletion={34} color='success' />

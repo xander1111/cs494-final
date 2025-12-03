@@ -3,7 +3,6 @@ import { NextRequest } from "next/server"
 import { createClient } from "@/utils/supabase/server"
 
 import { UserWord } from "@/types/userWord"
-import { Word } from "@/types/word"
 
 export async function GET(req: NextRequest) {
     const letter_pair = req.nextUrl.searchParams.get("letter_pair")
