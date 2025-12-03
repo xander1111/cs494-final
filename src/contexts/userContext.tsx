@@ -18,14 +18,16 @@ const UserContext = createContext<UserProps | undefined>(undefined)
 // provider
 export function UserProvider(props: { user: User | undefined, children: React.ReactNode }) {
     const router = useRouter()
+    const [user, setUser] = useState<User | undefined>(props.user)
 
     async function signOut() {
         await fetch('/api/signOut')
-        router.push('/login')
+        setUser(undefined)
+        router.push('/')
     }
 
     return (
-        <UserContext.Provider value={{ user: props.user, signOut }}>
+        <UserContext.Provider value={{ user, signOut }}>
             {props.children}
         </UserContext.Provider>
     )

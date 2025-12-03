@@ -52,7 +52,5 @@ async function getUser(): Promise<User | undefined> {
     return undefined
   }
 
-  console.log(user.data.user)
-
   return user.data.user
 }

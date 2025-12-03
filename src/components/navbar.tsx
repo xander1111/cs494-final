@@ -1,6 +1,6 @@
 'use client'
 
-import { Box } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 import HomeIcon from '@mui/icons-material/Home';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
@@ -40,7 +40,15 @@ export function Navbar() {
             </Box>
             {
                 user.user ?
-                    <NavbarButton color='warning' text="Log out" href='/api/signOut' icon={<LogoutIcon />} />
+                    <Button
+                        color='warning'
+                        variant='contained'
+                        startIcon={<LogoutIcon />}
+                        onClick={() => { user.signOut() }}
+                    >
+                        <Typography variant='navbar' >Log out</Typography>
+                    </Button>
+                    // <NavbarButton color='warning' text="Log out" href='/' icon={<LogoutIcon />} />
                     :
                     <NavbarButton color='warning' text="Log in" href='/login' icon={<LoginIcon />} />
             }
