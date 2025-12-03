@@ -41,10 +41,10 @@ export async function POST(req: NextRequest) {
         .select()
 
     if (res.error) {
-        return Response.json({ message: "An error occured while creating case in the database", error: res.error })
+        return Response.json({ message: "An error occured while creating word in the database", error: res.error })
     }
 
-    return Response.json({ message: "Success", algorithm: res.data[0] as Algorithm })
+    return Response.json({ message: "Success", word: res.data[0] as Word })
 
     // TODO also mark this word as used
 }

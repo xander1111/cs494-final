@@ -12,11 +12,16 @@ import AddIcon from '@mui/icons-material/Add';
 import { Algorithm } from "@/types/algorithm";
 import { Case } from "@/types/case";
 
+import { UserAlgorithm } from "@/types/userAlgorithm";
+import { useUser } from "@/contexts/userContext";
+
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
-export function CaseCard(props: { type: string, case: Case, algorithmUsed: string, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { type: string, case: Case, algorithmUsed?: Algorithm, userAlgorithm?: UserAlgorithm, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+    const user = useUser();
+
     const [expanded, setExpanded] = useState<boolean>(false);
     const [algorithms, setAlgorithms] = useState<Algorithm[] | undefined>()
     const [enteredAlg, setEnteredAlg] = useState<string>("")
@@ -52,6 +57,23 @@ export function CaseCard(props: { type: string, case: Case, algorithmUsed: strin
         setAlgorithms(newAlgs.algorithms)
     }
 
+    async function setUsedAlg(usedAlg: Algorithm) {
+        if (!user.user) {
+            return
+        }
+
+        const userAlg = {
+            id: props.userAlgorithm?.id,
+            alg_id: usedAlg.id!,  // id shouldn't be undefined since we should only call this function with Algorithms gotten from the database
+            user_uuid: user.user.id
+        } as UserAlgorithm
+
+        await fetch('/api/user_algorithm', {
+            method: 'POST',
+            body: JSON.stringify({ userAlgorithm: userAlg })
+        })
+    }
+
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
             <Stack direction='column' spacing={2}>
@@ -71,7 +93,7 @@ export function CaseCard(props: { type: string, case: Case, algorithmUsed: strin
                                     loadAlgorithms()
                                 }}
                             >
-                                {props.algorithmUsed} <EditIcon sx={{ fontSize: 'inherit' }} />
+                                {props.algorithmUsed?.algorithm} <EditIcon sx={{ fontSize: 'inherit' }} />
                             </Typography>
                         </Tooltip>
                     </Stack>
@@ -96,7 +118,7 @@ export function CaseCard(props: { type: string, case: Case, algorithmUsed: strin
                         {
                             algorithms ?
                                 algorithms.map((alg, i) => (
-                                    <Tooltip key={i} title="Click to select this algorithm">
+                                    <Tooltip key={i} title="Click to select this algorithm" onClick={() => { setUsedAlg(alg) }}>
                                         <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
                                     </Tooltip>
                                 ))
