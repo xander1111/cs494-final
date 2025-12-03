@@ -29,6 +29,12 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "No word provided" })
     }
 
+    const validWord = /^[a-zA-Z\d]+$/.test(word.word)
+
+    if (!validWord) {
+        return Response.json({ message: "Words can only contain alphanumeric characters" })
+    }
+
     const supabase = await createClient()
     const user = await supabase.auth.getUser()
     if (!user || !user.data.user) {

@@ -51,6 +51,12 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "algorithm.case must be defined" })
     }
 
+    const validAlg = /^[RUFLDBMESrufldbmeswxyz\'\[\]\(\)\:\,\s\d]+$/.test(alg.algorithm)
+
+    if (!validAlg) {
+        return Response.json({ message: "Invalid algorithm notation" })
+    }
+
     const supabase = await createClient()
     const user = await supabase.auth.getUser()
     if (!user || !user.data.user) {

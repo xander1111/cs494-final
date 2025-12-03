@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { Collapse, CircularProgress, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -20,9 +20,10 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
     const [expanded, setExpanded] = useState<boolean>(false);
     const [words, setWords] = useState<Word[] | undefined>()
     const [enteredWord, setEnteredWord] = useState<string>("")
-    // const [wordsUsed, setWordsUsed] = useState<Word[] | undefined>()
     const [userWords, setUserWords] = useState<UserWord[] | undefined>()
 
+    const validInput = useMemo(() => /^[a-zA-Z\d]+$/.test(enteredWord) || enteredWord.length == 0, [enteredWord])
+    const getHelperText = useMemo(() => (validInput ? "" : "Words can only contain alphanumeric characters"), [validInput])
 
     function loadWords() {
         if (!words) {
@@ -34,6 +35,9 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
 
     async function submitWord() {
         if (!enteredWord)
+            return
+
+        if (!validInput)
             return
 
         const word = {
@@ -183,7 +187,15 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
 
                             <Stack direction='column' spacing={2} width='100%'>
                                 <Stack direction='row' spacing={2}>
-                                    <StyledTextField label="Add a word" type='text' value={enteredWord} onChange={e => { setEnteredWord(e.target.value) }} color={props.color} />
+                                    <StyledTextField
+                                        label="Add a word"
+                                        type='text'
+                                        value={enteredWord}
+                                        error={!validInput}
+                                        helperText={getHelperText}
+                                        onChange={e => { setEnteredWord(e.target.value) }}
+                                        color={props.color}
+                                    />
                                     <Tooltip title="Add word">
                                         <IconButton onClick={submitWord}>
                                             <AddIcon color='success' />

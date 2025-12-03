@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import { Checkbox, CircularProgress, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 
@@ -29,6 +29,9 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
     const [userAlg, setUserAlg] = useState<UserAlgorithm | undefined>()
     const [loadingAlgUsed, setLoadingAlgUsed] = useState<boolean>(true)
 
+    const validInput = useMemo(() => /^[RUFLDBMESrufldbmeswxyz\'\[\]\(\)\:\,\s\d]+$/.test(enteredAlg) || enteredAlg.length == 0, [enteredAlg])
+    const getHelperText = useMemo(() => (validInput ? "" : "Invalid algorithm notation"), [validInput])
+
     function loadAlgorithms() {
         if (!algorithms) {
             fetch(`/api/algorithm?type=${props.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
@@ -39,6 +42,9 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
 
     async function submitAlgorithm() {
         if (!enteredAlg)
+            return
+
+        if (!validInput)
             return
 
         const alg = {
@@ -145,7 +151,15 @@ export function CaseCard(props: { type: string, case: Case, color: 'primary' | '
                     <Stack direction='column' spacing={2} width='100%'>
                         <StyledDivider />
                         <Stack direction='row' spacing={2}>
-                            <StyledTextField label="Add an algorithm" type='text' value={enteredAlg} onChange={e => { setEnteredAlg(e.target.value) }} color={props.color} />
+                            <StyledTextField
+                                label="Add an algorithm"
+                                type='text'
+                                value={enteredAlg}
+                                error={!validInput}
+                                helperText={getHelperText}
+                                onChange={e => { setEnteredAlg(e.target.value) }}
+                                color={props.color}
+                            />
                             <Tooltip title="Add algorithm">
                                 <IconButton onClick={submitAlgorithm}>
                                     <AddIcon color={props.color} />
