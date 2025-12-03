@@ -15,6 +15,7 @@ import StyledTextField from "@/components/styledTextField";
 export function LetterPairCard(props: { letterPair: string, words: string[], color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const [expanded, setExpanded] = useState<boolean>(false);
     const [words, setWords] = useState<Word[] | undefined>()
+    const [enteredWord, setEnteredWord] = useState<string>("")
 
 
     function loadWords() {
@@ -23,6 +24,27 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                 .then(data => data.json())
                 .then((data: { words: Word[] }) => { setWords(data.words) })
         }
+    }
+
+    async function submitWord() {
+        if (!enteredWord)
+            return
+
+        const word = {
+            letter_pair: props.letterPair,
+            word: enteredWord,
+        } as Word
+
+        setEnteredWord("")
+
+        await fetch('/api/word', {
+            method: 'POST',
+            body: JSON.stringify({ word: word })
+        })
+
+        const data = await fetch(`/api/word?letter_pair=${props.letterPair}`)
+        const newWords = await data.json() as { words: Word[] }
+        setWords(newWords.words)
     }
 
     return (
@@ -80,9 +102,9 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
 
                             <Stack direction='column' spacing={2} width='100%'>
                                 <Stack direction='row' spacing={2}>
-                                    <StyledTextField label="Add a word" type='text' onChange={() => { }} color={props.color} />
+                                    <StyledTextField label="Add a word" type='text' value={enteredWord} onChange={e => { setEnteredWord(e.target.value) }} color={props.color} />
                                     <Tooltip title="Add word">
-                                        <IconButton>
+                                        <IconButton onClick={submitWord}>
                                             <AddIcon color='success' />
                                         </IconButton>
                                     </Tooltip>

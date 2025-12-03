@@ -19,3 +19,32 @@ export async function GET(req: NextRequest) {
 
     return Response.json({ words: res.data as Word[] })
 }
+
+
+export async function POST(req: NextRequest) {
+    const data = await req.json()
+    const word = data.word as Word
+
+    if (!word) {
+        return Response.json({ message: "No word provided" })
+    }
+
+    const supabase = await createClient()
+    const user = await supabase.auth.getUser()
+    if (!user || !user.data.user) {
+        return Response.json({ message: "Must be logged in" })
+    }
+
+    const res = await supabase
+        .from('words')
+        .insert(word)
+        .select()
+
+    if (res.error) {
+        return Response.json({ message: "An error occured while creating case in the database", error: res.error })
+    }
+
+    return Response.json({ message: "Success", algorithm: res.data[0] as Algorithm })
+
+    // TODO also mark this word as used
+}
