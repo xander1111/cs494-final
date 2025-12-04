@@ -10,12 +10,12 @@ export function StatLine(props: { category: string, numericCompletion: string, p
     return (
         <Stack direction='row' justifyContent='space-between' width='100%' >
             <CategoryChip category={props.category} />
-            <Stack direction='row' justifyContent='flex-end' spacing={2} width='25%' >
+            <Stack direction='row' justifyContent='flex-end' spacing={2} width='25%' height='100%' >
                 <Typography variant="cardSubheader" color='common.black' textAlign='center' whiteSpace='nowrap'>{props.numericCompletion}</Typography>
-                <Box display='flex' justifyContent='center' alignItems='center' width='80%' height='80%'>
+                <Box display='flex' justifyContent='center' alignItems='center' width='100%' height='100%'>
                     <CircularProgress
                         enableTrackSlot
-                        size='100%'
+                        size='2.5rem'
                         variant='determinate'
                         color={color}
                         value={props.percentCompletion}

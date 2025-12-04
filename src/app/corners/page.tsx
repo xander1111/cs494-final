@@ -6,6 +6,8 @@ import { CircularProgress, List, MenuItem, Stack, Typography } from "@mui/materi
 
 import { Case } from "@/types/case";
 
+import { cornerCategories } from "@/utils/categoryUtils";
+
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
 import { CaseCard } from "@/components/caseCard";
@@ -61,7 +63,7 @@ export default function Home() {
                     }}
                 >
                     {
-                        cases ? 
+                        cases ?
                             cases.map((cs, i) => (
                                 <CaseCard key={i} case={cs} color='secondary' />
                             ))
@@ -72,17 +74,11 @@ export default function Home() {
             </Stack>
 
             <StatsCard type="Corner">
-                {/* TODO get categories from util */}
-                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} />
-                <StatLine category="U-Up, D-Side" numericCompletion="x/y" percentCompletion={12} />
-                <StatLine category="U-Up, D-Down" numericCompletion="x/y" percentCompletion={34} />
-                <StatLine category="D-Down, D-Down" numericCompletion="x/y" percentCompletion={56} />
-                <StatLine category="D-Side, D-Side" numericCompletion="x/y" percentCompletion={78} />
-                <StatLine category="LFU/BRU, D-Any" numericCompletion="x/y" percentCompletion={90} />
-                <StatLine category="U-Side, D-Any" numericCompletion="x/y" percentCompletion={12} />
-                <StatLine category="D-Side, D-Down" numericCompletion="x/y" percentCompletion={23} />
-                <StatLine category="U-Any, U-Any" numericCompletion="x/y" percentCompletion={34} />
-                <StatLine category="Special" numericCompletion="x/y" percentCompletion={45} />
+                {
+                    Object.entries(cornerCategories).map((category, i) => (
+                        <StatLine key={i} category={category[0]} numericCompletion={`x/${category[1]}`} percentCompletion={60} />
+                    ))
+                }
             </StatsCard>
 
         </Stack>
