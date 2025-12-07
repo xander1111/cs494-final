@@ -5,13 +5,10 @@ import { createClient } from "@/utils/supabase/server"
 import { UserAlgorithm } from "@/types/userAlgorithm"
 
 export async function GET(req: NextRequest) {
-    const type = req.nextUrl.searchParams.get("type")
-    const buffer = req.nextUrl.searchParams.get("buffer")
-    const target_a = req.nextUrl.searchParams.get("target_a")
-    const target_b = req.nextUrl.searchParams.get("target_b")
+    const caseId = req.nextUrl.searchParams.get("case_id")
 
-    if (!type || !buffer || !target_a || !target_b) {
-        return Response.json({ message: "HTTP query missing one of the following search parameters: type, buffer, target_a, target_b" })
+    if (!caseId) {
+        return Response.json({ message: "HTTP query missing search parameter 'case_id'" })
     }
 
     const supabase = await createClient()
@@ -31,10 +28,7 @@ export async function GET(req: NextRequest) {
             )
         `)
         .eq("user_algorithm.user_uuid", user.data.user.id)
-        .eq("cases.type", type)
-        .eq("cases.buffer", buffer)
-        .eq("cases.target_a", target_a)
-        .eq("cases.target_b", target_b)
+        .eq("cases.id", caseId)
         .limit(1, {referencedTable: 'cases'})
         .limit(1, {referencedTable: 'user_algorithm'})
         .limit(1)
@@ -52,20 +46,6 @@ export async function GET(req: NextRequest) {
     if (res.data.length === 0) {
         return Response.json({ userAlgorithm: {} })
     }
-
-    // const cs = {
-    //     id: res.data[0].cases.id,
-    //     type: res.data[0].cases.type,
-    //     buffer: res.data[0].cases.buffer,
-    //     target_a: res.data[0].cases.target_a,
-    //     target_b: res.data[0].cases.target_b,
-    // } as Case
-
-    // const alg = {
-    //     id: res.data[0].id,
-    //     algorithm: res.data[0].algorithm,
-    //     case: cs,
-    // } as Algorithm
 
     return Response.json({ userAlgorithm: res.data[0].algorithm })
 }

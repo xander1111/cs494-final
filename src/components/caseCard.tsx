@@ -69,7 +69,7 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
         async function updateUsedAlgs() {
             setAlgorithmUsed(undefined)  // Displays loading wheel
 
-            const res = await fetch(`/api/user_algorithm?type=${props.userCaseInfo.type}&buffer=${props.userCaseInfo.buffer}&target_a=${props.userCaseInfo.target_a}&target_b=${props.userCaseInfo.target_b}`)
+            const res = await fetch(`/api/user_algorithm?case_id=${props.userCaseInfo.case_id}`)
             const data = await res.json()
 
             setAlgorithmUsed(data.userAlgorithm)

@@ -3,6 +3,7 @@ import { NextRequest } from "next/server"
 import { createClient } from "@/utils/supabase/server"
 
 import { UserWord } from "@/types/userWord"
+import { Word } from "@/types/word"
 
 export async function GET(req: NextRequest) {
     const letter_pair = req.nextUrl.searchParams.get("letter_pair")
@@ -12,8 +13,8 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
+    const user = await supabase.auth.getUser()
+    if (!user || !user.data.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
             user_uuid,
             words!inner ( id, letter_pair, word )
         `)
-        .eq("user_uuid", session.user.id)
+        .eq("user_uuid", user.data.user.id)
         .eq("words.letter_pair", letter_pair)
         .overrideTypes<Array<{
             id: number
@@ -41,46 +42,38 @@ export async function GET(req: NextRequest) {
         return Response.json({ userWords: [] })
     }
 
-    const userWords: UserWord[] = []
+    const userWords: Word[] = []
 
     for (const userWordData of res.data) {
         userWords.push({
-            id: userWordData.id,
-            user_uuid: userWordData.user_uuid,
-            word: {
-                id: userWordData.words.id,
-                word: userWordData.words.word,
-                letter_pair: userWordData.words.letter_pair,
-            },
+            id: userWordData.words.id,
+            word: userWordData.words.word,
+            letter_pair: userWordData.words.letter_pair,
         })
-    }
+}
 
-    return Response.json({ userWords: userWords })
+return Response.json({ userWords: userWords })
 }
 
 export async function DELETE(req: NextRequest) {
     const data = await req.json()
-    const userWord = data.userWord as UserWord
+    const userWordId = data.userWordId as number
 
-    if (!userWord) {
-        return Response.json({ message: "No userWord provided" })
-    }
-    if (!userWord.id) {
-        return Response.json({ message: "userWord has no id" })
+    if (!userWordId) {
+        return Response.json({ message: "No userWordId provided" })
     }
 
     const supabase = await createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
+    const user = await supabase.auth.getUser()
+    if (!user || !user.data.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
     const res = await supabase
         .from('user_word')
         .delete()
-        .eq("user_uuid", session.user.id)
-        .eq("id", userWord.id)
-        .eq("word_id", userWord.word.id)
+        .eq("user_uuid", user.data.user.id)
+        .eq("word_id", userWordId)
         .select()
 
     return Response.json({ message: "Success", rowsDeleted: res.data })

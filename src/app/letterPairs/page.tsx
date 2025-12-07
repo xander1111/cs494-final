@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { List, MenuItem, Stack, Typography } from "@mui/material";
+import { CircularProgress, List, MenuItem, Stack, Typography } from "@mui/material";
 
+import { UserWordInfo } from "@/types/userWordInfo";
 
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
@@ -13,9 +14,22 @@ import { StatLine } from "@/components/statLine";
 
 
 export default function Home() {
+    const [userWordInfos, setUserWordInfos] = useState<UserWordInfo[] | undefined>()
+
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [sortBy, setSortBy] = useState<string>("alphabetical")
     const [ascending, setAscending] = useState<boolean>(false)
+
+    useEffect(() => {
+        async function getWordInfo() {
+            const res = await fetch(`/api/user_word_info`)
+            const data = await res.json()
+
+            setUserWordInfos(data.userWordInfos)
+        }
+
+        getWordInfo()
+    }, [])
 
     return (
         <Stack direction='row' width='80%' height='calc(100vh - 4rem)' justifyContent='space-evenly'>
@@ -45,21 +59,14 @@ export default function Home() {
                         pr: 1,
                     }}
                 >
-                    <LetterPairCard letterPair="SR" words={["SpeaR", "SpeedRun"]} color='success' />
-                    <LetterPairCard letterPair="CT" words={["CaT"]} color='success' />
-
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
-                    <LetterPairCard letterPair="AB" words={[]} color='success' />
+                    {
+                        userWordInfos ?
+                            userWordInfos.map((wordInfo, i) => (
+                                <LetterPairCard key={i} userWordInfo={wordInfo}  color='success' />
+                            ))
+                            :
+                            <CircularProgress color='success' />
+                    }
                 </List>
             </Stack>
             <StatsCard type="Letter Pair">

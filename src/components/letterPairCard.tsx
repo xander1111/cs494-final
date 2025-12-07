@@ -9,26 +9,27 @@ import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined';
 
 import { Word } from "@/types/word";
 import { UserWord } from "@/types/userWord";
+import { UserWordInfo } from "@/types/userWordInfo";
 import { useUser } from "@/contexts/userContext";
 
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 
-export function LetterPairCard(props: { letterPair: string, words: string[], color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function LetterPairCard(props: { userWordInfo: UserWordInfo , color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const user = useUser();
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [words, setWords] = useState<Word[] | undefined>()
     const [enteredWord, setEnteredWord] = useState<string>("")
-    const [userWords, setUserWords] = useState<UserWord[] | undefined>()
+    const [userWords, setUserWords] = useState<Word[] | undefined>(props.userWordInfo.words)
 
     const validInput = useMemo(() => /^[a-zA-Z\d]+$/.test(enteredWord) || enteredWord.length == 0, [enteredWord])
     const getHelperText = useMemo(() => (validInput ? "" : "Words can only contain alphanumeric characters"), [validInput])
 
     function loadWords() {
         if (!words) {
-            fetch(`/api/word?letter_pair=${props.letterPair}`)
+            fetch(`/api/word?letter_pair=${props.userWordInfo.letter_pair}`)
                 .then(data => data.json())
                 .then((data: { words: Word[] }) => { setWords(data.words) })
         }
@@ -42,7 +43,7 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
             return
 
         const word = {
-            letter_pair: props.letterPair,
+            letter_pair: props.userWordInfo.letter_pair,
             word: enteredWord,
         } as Word
 
@@ -53,19 +54,18 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
             body: JSON.stringify({ word: word })
         })
 
-        const data = await fetch(`/api/word?letter_pair=${props.letterPair}`)
+        const data = await fetch(`/api/word?letter_pair=${props.userWordInfo.letter_pair}`)
         const newWords = await data.json() as { words: Word[] }
         setWords(newWords.words)
     }
 
-    async function removeUsedWord(word: UserWord) {
+    async function removeUsedWord(userWordId: number) {
         async function updateUsedWords() {
             setUserWords(undefined)
 
-            const res = await fetch(`/api/user_word?letter_pair=${props.letterPair}`)
+            const res = await fetch(`/api/user_word?letter_pair=${props.userWordInfo.letter_pair}`)
             const data = await res.json()
 
-            console.log(data)
             setUserWords(data.userWords)
         }
 
@@ -75,7 +75,7 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
 
         await fetch('/api/user_word', {
             method: 'DELETE',
-            body: JSON.stringify({ userWord: word })
+            body: JSON.stringify({ userWordId: userWordId })
         })
 
         updateUsedWords()
@@ -85,10 +85,9 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
         async function updateUsedWords() {
             setUserWords(undefined)
 
-            const res = await fetch(`/api/user_word?letter_pair=${props.letterPair}`)
+            const res = await fetch(`/api/user_word?letter_pair=${props.userWordInfo.letter_pair}`)
             const data = await res.json()
 
-            console.log(data)
             setUserWords(data.userWords)
         }
 
@@ -109,32 +108,13 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
         updateUsedWords()
     }
 
-    useEffect(() => {
-        async function updateUsedWords() {
-            setUserWords(undefined)
-
-            const res = await fetch(`/api/user_word?letter_pair=${props.letterPair}`)
-            const data = await res.json()
-
-            console.log(data)
-            setUserWords(data.userWords)
-        }
-
-        if (!user.user) {
-            return  // Don't make API calls that require the user to be logged in
-        }
-
-        updateUsedWords()
-    }, [])
-
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
             <Stack direction='column' spacing={2}>
 
                 <Stack direction='row' justifyContent='space-between' spacing={2} width='100%' >
                     <Stack alignItems='flex-start'>
-                        <Typography variant="cardHeader" color={props.color}>{props.letterPair}</Typography>
-
+                        <Typography variant="cardHeader" color={props.color}>{props.userWordInfo.letter_pair}</Typography>
                         {
                             user.user ?
                                 userWords ?
@@ -151,7 +131,7 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                                         >
                                             {
                                                 userWords.length > 0 ?
-                                                    userWords.map(userWord => userWord.word.word).join(", ")
+                                                    userWords.map(userWord => userWord.word).join(", ")
                                                     :
                                                     "No words added"
                                             } <EditIcon sx={{ fontSize: 'inherit' }} />
@@ -191,9 +171,9 @@ export function LetterPairCard(props: { letterPair: string, words: string[], col
                                                 userWords ?
                                                     userWords.map((userWord, i) => (
                                                         <Typography key={i} variant='cardSubheader'>
-                                                            {userWord.word.word}
+                                                            {userWord.word}
                                                             <Tooltip title="Remove word">
-                                                                <IconButton onClick={() => { removeUsedWord(userWord) }}>
+                                                                <IconButton onClick={() => { removeUsedWord(userWord.id!) }}>
                                                                     <BackspaceOutlinedIcon color='error' />
                                                                 </IconButton>
                                                             </Tooltip>

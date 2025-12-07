@@ -49,10 +49,3 @@ export const edgeCategories = {
 export function getColorForCategory(category: keyof typeof colorMap): 'primary' | 'secondary' | 'error' | 'success' {
     return colorMap[category]
 }
-
-// export function getCategories(type: string): {[key: string]: number} {
-//     return type == 'corner' ?
-//         cornerCategories
-//         :
-//         edgeCategories
-// }
