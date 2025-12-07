@@ -68,7 +68,7 @@ export function ProgressCard(props: { title: string, type: string, nonPercent?: 
                         }
                         {
                             props.nonPercent || completedCases === undefined ?
-                                <></>
+                                null
                                 :
                                 <Typography variant='cardSubheader' position='absolute'>{((completedCases ?? 0) / props.totalCases * 100).toFixed(2)}%</Typography>
                         }
@@ -77,7 +77,7 @@ export function ProgressCard(props: { title: string, type: string, nonPercent?: 
                     <Typography variant='cardHeader' textAlign='center'>{props.title}</Typography>
                     {
                         props.nonPercent || completedCases === undefined ?
-                            <></>
+                            null
                             :
                             <Typography variant='cardSubheader' textAlign='center'>{`${completedCases}/${props.totalCases}`}</Typography>
                     }

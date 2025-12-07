@@ -159,7 +159,7 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
                                             loadAlgorithms()
                                         }}
                                     >
-                                        View algorothms
+                                        View algorithms
                                     </Typography>
 
                                 </Tooltip>
