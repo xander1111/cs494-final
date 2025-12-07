@@ -22,7 +22,7 @@ export default function LoginPage() {
               <StyledTextField color='warning' id='password' name='password' type='password' label="Password" variant='outlined' required />
             </Stack>
 
-            <Button color='warning' fullWidth variant='contained' onClick={loginGoogle} startIcon={<GoogleIcon />}>Log in with Google</Button>
+            {/* <Button color='warning' fullWidth variant='contained' onClick={loginGoogle} startIcon={<GoogleIcon />}>Log in with Google</Button> */}
 
             <Stack direction='row' width='100%' justifyContent='space-between'>
               <Button color='success' variant='contained' formAction={login} type='submit'>Log in</Button>
