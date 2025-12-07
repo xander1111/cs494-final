@@ -27,7 +27,7 @@ export function WeeklyProgressCard() {
 
     useEffect(() => {
         async function getWeeklyOverall() {
-            const res = await fetch('/api/learned_algs/recent')
+            const res = await fetch('/api/learned_algs/learned')
             const data = await res.json()
 
             setOverallLearnedCount(data.recent)
@@ -35,7 +35,7 @@ export function WeeklyProgressCard() {
         }
 
         async function getWeeklyCorners() {
-            const res = await fetch('/api/learned_algs/recent?type=corner')
+            const res = await fetch('/api/learned_algs/learned?type=corner')
             const data = await res.json()
 
             setCornersLearnedCount(data.recent)
@@ -43,7 +43,7 @@ export function WeeklyProgressCard() {
         }
 
         async function getWeeklyEdges() {
-            const res = await fetch('/api/learned_algs/recent?type=edge')
+            const res = await fetch('/api/learned_algs/learned?type=edge')
             const data = await res.json()
 
             setEdgesLearnedCount(data.recent)
@@ -51,7 +51,7 @@ export function WeeklyProgressCard() {
         }
 
         async function getWeeklyWords() {
-            const res = await fetch('/api/user_word/recent')
+            const res = await fetch('/api/user_word/learned')
             const data = await res.json()
 
             setWordsAddedCount(data.recent)
@@ -145,7 +145,7 @@ export function WeeklyProgressCard() {
                         icon={<EdgeGridIcon />}
                     />
                     <WeeklyProgressEntry
-                        header="Letter Pairs Added"
+                        header="Words Added"
                         subheader={{
                             prefix: "Added ",
                             count: wordsAddedCount,
