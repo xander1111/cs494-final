@@ -9,16 +9,25 @@ export async function GET(req: NextRequest) {
         return Response.json({ message: "Must be logged in" })
     }
 
-    const res = await supabase
-            .from('user_word')
-            .select('*', { count: 'exact' })
-            .eq('user_uuid', user.data.user.id)
-            .gt('time_added', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+    const recent = await supabase
+        .from('user_word')
+        .select('*', { count: 'exact' })
+        .eq('user_uuid', user.data.user.id)
+        .gt('time_added', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
 
-    if (res.error) {
-        return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
+    if (recent.error) {
+        return Response.json({ message: "An error occured while retreiving data from the database", error: recent.error })
     }
 
-    return Response.json({ count: res.count })
+    const overall = await supabase
+        .from('user_word')
+        .select('*', { count: 'exact' })
+        .eq('user_uuid', user.data.user.id)
+
+    if (overall.error) {
+        return Response.json({ message: "An error occured while retreiving data from the database", error: recent.error })
+    }
+
+    return Response.json({ recent: recent.count, overall: overall.count })
 }
 

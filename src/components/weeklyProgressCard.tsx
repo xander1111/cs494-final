@@ -1,7 +1,13 @@
-import { Stack, Typography } from "@mui/material";
+'use client'
+
+import { useEffect, useState } from "react";
+
+import { CircularProgress, Stack, Typography } from "@mui/material";
 
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import CalculateIcon from '@mui/icons-material/Calculate';
+
+import { useUser } from "@/contexts/userContext";
 
 import StyledCard from "@/components/styledCard";
 import StyledDivider from "@/components/styledDivider";
@@ -10,13 +16,99 @@ import { CornerGridIcon } from "@/components/cornerGridIcon";
 import { EdgeGridIcon } from "@/components/edgeGridIcon";
 
 export function WeeklyProgressCard() {
+    const user = useUser()
+
+    const [overallLearnedCount, setOverallLearnedCount] = useState<number | undefined>()
+    const [cornersLearnedCount, setCornersLearnedCount] = useState<number | undefined>()
+    const [edgesLearnedCount, setEdgesLearnedCount] = useState<number | undefined>()
+    const [wordsAddedCount, setWordsAddedCount] = useState<number | undefined>()
+
+    const [completionEstimate, setCompletionEstimate] = useState<Date | undefined | boolean>()  // true = completed, false = no estimate
+
+    useEffect(() => {
+        async function getWeeklyOverall() {
+            const res = await fetch('/api/learned_algs/recent')
+            const data = await res.json()
+
+            setOverallLearnedCount(data.recent)
+            return [data.recent, data.overall]
+        }
+
+        async function getWeeklyCorners() {
+            const res = await fetch('/api/learned_algs/recent?type=corner')
+            const data = await res.json()
+
+            setCornersLearnedCount(data.recent)
+            return [data.recent, data.overall]
+        }
+
+        async function getWeeklyEdges() {
+            const res = await fetch('/api/learned_algs/recent?type=edge')
+            const data = await res.json()
+
+            setEdgesLearnedCount(data.recent)
+            return [data.recent, data.overall]
+        }
+
+        async function getWeeklyWords() {
+            const res = await fetch('/api/user_word/recent')
+            const data = await res.json()
+
+            setWordsAddedCount(data.recent)
+            return [data.recent, data.overall]
+        }
+
+        async function getWeeklyAdditions() {
+            const [, [cornersRecent, cornersOverall], [edgesRecent, edgesOverall],] = await Promise.all([
+                getWeeklyOverall(),
+                getWeeklyCorners(),
+                getWeeklyEdges(),
+                getWeeklyWords(),
+            ])
+
+            // Estimate completion date
+            const cornerRemaining = 378 - cornersOverall
+            const edgeRemaining = 378 - edgesOverall
+
+            const cornerPace = (cornersRecent ?? 0) / 7
+            const edgePace = (edgesRecent ?? 0) / 7
+
+            const cornerDaysToComplete = cornerRemaining / cornerPace
+            const edgeDaysToComplete = edgeRemaining / edgePace
+
+            if (cornerDaysToComplete < 0 && edgeDaysToComplete < 0) {
+                setCompletionEstimate(true)
+            } else if (cornerDaysToComplete == Infinity || edgeDaysToComplete == Infinity) {
+                setCompletionEstimate(false)
+            } else {
+                setCompletionEstimate(new Date(Date.now() + Math.max(cornerDaysToComplete, edgeDaysToComplete) * 24 * 60 * 60 * 1000))
+            }
+        }
+
+        if (!user.user)
+            return
+
+        getWeeklyAdditions()
+    }, [])
+
     return (
         <StyledCard>
             <Stack>
                 <Typography variant="cardHeader">Weekly Progress</Typography>
                 <Stack spacing={0}>
-                    <Typography variant="cardSubheader">Estimated completion date:</Typography>
-                    <Typography variant="cardSubheader">[Jan 14, 2026]</Typography>
+                    <Typography variant="cardSubheader">Estimated 3-Style completion date:</Typography>
+                    {
+                        completionEstimate !== undefined ?
+                            completionEstimate === true ?
+                                <Typography variant="cardSubheader">Complete!</Typography>
+                                :
+                                completionEstimate === false ?
+                                    <Typography variant="cardSubheader">N/A</Typography>
+                                    :
+                                    <Typography variant="cardSubheader">{completionEstimate.toLocaleDateString()}</Typography>
+                            :
+                            <CircularProgress color='warning' />
+                    }
                 </Stack>
 
                 <StyledDivider />
@@ -24,26 +116,42 @@ export function WeeklyProgressCard() {
                 <Stack alignItems='flex-start'>
                     <WeeklyProgressEntry
                         header="Algorithms Learned"
-                        subheader="Learned [47] total new algorithms"
-                        color='error.main'
+                        subheader={{
+                            prefix: "Learned ",
+                            count: overallLearnedCount,
+                            postfix: " total new algorithms"
+                        }}
+                        color='error'
                         icon={<CalculateIcon />}
                     />
                     <WeeklyProgressEntry
                         header="Corners Learned"
-                        subheader="Learned [35] new algorithms"
-                        color='secondary.main'
+                        subheader={{
+                            prefix: "Learned ",
+                            count: cornersLearnedCount,
+                            postfix: " new algorithms"
+                        }}
+                        color='secondary'
                         icon={<CornerGridIcon />}
                     />
                     <WeeklyProgressEntry
                         header="Edges Learned"
-                        subheader="Learned [12] new algorithms"
-                        color='primary.main'
+                        subheader={{
+                            prefix: "Learned ",
+                            count: edgesLearnedCount,
+                            postfix: " new algorithms"
+                        }}
+                        color='primary'
                         icon={<EdgeGridIcon />}
                     />
                     <WeeklyProgressEntry
                         header="Letter Pairs Added"
-                        subheader="Added [60] new letter pairs"
-                        color='success.main'
+                        subheader={{
+                            prefix: "Added ",
+                            count: wordsAddedCount,
+                            postfix: " new words"
+                        }}
+                        color='success'
                         icon={<TextFieldsIcon />}
                     />
                 </Stack>

@@ -12,28 +12,50 @@ export async function GET(req: NextRequest) {
         return Response.json({ message: "Must be logged in" })
     }
 
-    let query = supabase
-            .from('learned_algs')
-            .select(`
+    let recentQuery = supabase
+        .from('learned_algs')
+        .select(`
                 *,
                 cases!inner ( )
             `, { count: 'exact' })
-            .eq('user_uuid', user.data.user.id)
-            .gt('time_added', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .eq('user_uuid', user.data.user.id)
+        .gt('time_added', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
 
     if (type) {
-        query = query.eq("cases.type", type)
+        recentQuery = recentQuery.eq("cases.type", type)
     }
     if (category) {
-        query = query.eq("cases.category", category)
+        recentQuery = recentQuery.eq("cases.category", category)
     }
 
-    const res = await query
+    let overallQuery = supabase
+        .from('learned_algs')
+        .select(`
+                *,
+                cases!inner ( )
+            `, { count: 'exact' })
+        .eq('user_uuid', user.data.user.id)
+        .gt('time_added', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
 
-    if (res.error) {
-        return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
+    if (type) {
+        overallQuery = overallQuery.eq("cases.type", type)
+    }
+    if (category) {
+        overallQuery = overallQuery.eq("cases.category", category)
     }
 
-    return Response.json({ count: res.count })
+    const recent = await recentQuery
+
+    if (recent.error) {
+        return Response.json({ message: "An error occured while retreiving data from the database", error: recent.error })
+    }
+
+    const overall = await overallQuery
+
+    if (recent.error) {
+        return Response.json({ message: "An error occured while retreiving data from the database", error: overall.error })
+    }
+
+    return Response.json({ recent: recent.count, overall: overall.count })
 }
 
