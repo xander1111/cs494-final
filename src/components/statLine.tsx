@@ -8,7 +8,7 @@ import { CategoryChip } from "@/components/categoryChip";
 
 import { getColorForCategory } from "@/utils/categoryUtils";
 
-export function StatLine(props: { category: string, type: string, totalCases: number, nonPercent?: boolean }) {
+export function StatLine(props: { category: string, type: string, totalCases: number, setFilter?: (value: string | undefined) => void, nonPercent?: boolean }) {
     const [learnedCasesCount, setLearnedCasesCount] = useState<number | undefined>()
     const [learnedPercent, setLearnedPercent] = useState<number | undefined>()
 
@@ -36,7 +36,7 @@ export function StatLine(props: { category: string, type: string, totalCases: nu
 
     return (
         <Stack direction='row' justifyContent='space-between' width='100%' >
-            <CategoryChip category={props.category} />
+            <CategoryChip category={props.category} setFilter={props.setFilter} />
             {
                 learnedPercent !== undefined ?
                     <Stack direction='row' justifyContent='flex-end' spacing={2} width='25%' height='100%' >

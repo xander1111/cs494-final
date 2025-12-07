@@ -20,7 +20,7 @@ import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 import { CategoryChip } from "@/components/categoryChip";
 
-export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' | 'secondary' | 'error' | 'success', setFilter: (value: string | undefined) => void, }) {
     const user = useUser();
 
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -126,7 +126,7 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
                     <Stack alignItems='flex-start'>
                         <Stack direction='row' spacing={2} >
                             <Typography variant='cardHeader' color={props.color}>{props.userCaseInfo.target_a}{props.userCaseInfo.target_b}</Typography>
-                            <CategoryChip category={props.userCaseInfo.category} />
+                            <CategoryChip category={props.userCaseInfo.category} setFilter={props.setFilter} />
                         </Stack>
                         {
                             user.user ?

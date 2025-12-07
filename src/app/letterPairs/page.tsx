@@ -17,8 +17,23 @@ export default function Home() {
     const [userWordInfos, setUserWordInfos] = useState<UserWordInfo[] | undefined>()
 
     const [searchTerm, setSearchTerm] = useState<string>("")
+    const [filteredUserWordInfos, setFilteredUserWordInfos] = useState<UserWordInfo[] | undefined>(userWordInfos)
+
     const [sortBy, setSortBy] = useState<string>("alphabetical")
     const [ascending, setAscending] = useState<boolean>(false)
+
+    useEffect(() => {
+        async function filterWords() {
+            const newFilteredWords = userWordInfos ? [...userWordInfos].filter(userWord =>
+                userWord.letter_pair.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                userWord.words.map(word => word.word.toLowerCase().includes(searchTerm.toLowerCase())).reduce((prev, cur) => prev || cur, false)
+            ) : undefined
+
+            setFilteredUserWordInfos(newFilteredWords)
+        }
+
+        filterWords()
+    }, [userWordInfos, searchTerm])
 
     useEffect(() => {
         async function getWordInfo() {
@@ -60,9 +75,9 @@ export default function Home() {
                     }}
                 >
                     {
-                        userWordInfos ?
-                            userWordInfos.map((wordInfo, i) => (
-                                <LetterPairCard key={i} userWordInfo={wordInfo}  color='success' />
+                        filteredUserWordInfos ?
+                            filteredUserWordInfos.map(wordInfo => (
+                                <LetterPairCard key={wordInfo.letter_pair} userWordInfo={wordInfo} color='success' />
                             ))
                             :
                             <CircularProgress color='success' />
@@ -70,7 +85,7 @@ export default function Home() {
                 </List>
             </Stack>
             <StatsCard type="Letter Pair">
-                <StatLine nonPercent category='Total' type='letterPair' totalCases={24*24} />
+                <StatLine nonPercent category='Total' type='letterPair' totalCases={24 * 24} />
             </StatsCard>
         </Stack>
     );
