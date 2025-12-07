@@ -98,6 +98,7 @@ export async function POST(req: NextRequest) {
         .insert({
             user_uuid: user.data.user.id,
             word_id: wordId,
+            time_added: new Date(Date.now()).toISOString(),
         })
         .select()
 

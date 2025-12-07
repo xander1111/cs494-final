@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
         .insert({
             user_uuid: user.data.user.id,
             case_id: caseId,
+            time_added: new Date(Date.now()).toISOString(),
         })
         .select()
 
