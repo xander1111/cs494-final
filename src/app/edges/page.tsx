@@ -75,7 +75,7 @@ export default function Home() {
             <StatsCard type="Edge">
                 {
                     Object.entries(edgeCategories).map((category, i) => (
-                        <StatLine key={i} category={category[0]} numericCompletion={`x/${category[1]}`} percentCompletion={60} />
+                        <StatLine key={i} category={category[0]} type='edge' totalCases={category[1]} />
                     ))
                 }
             </StatsCard>

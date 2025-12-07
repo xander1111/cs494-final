@@ -70,7 +70,7 @@ export default function Home() {
                 </List>
             </Stack>
             <StatsCard type="Letter Pair">
-                <StatLine category="Total" numericCompletion="x/y" percentCompletion={82} />
+                <StatLine nonPercent category='Total' type='letterPair' totalCases={24*24} />
             </StatsCard>
         </Stack>
     );

@@ -44,27 +44,30 @@ export function ProgressCard(props: { title: string, type: string, nonPercent?: 
                 <Stack width={"40%"}>
                     <Box display='flex' justifyContent='center' alignItems='center' width='80%' height='80%'>
                         {
-                            props.nonPercent ?
-                                <Typography variant='cardHeader' >
-                                    {completedCases}
-                                </Typography>
+                            completedCases === undefined ?
+                                <CircularProgress size='100%' color={props.color} />
                                 :
-                                <CircularProgress
-                                    enableTrackSlot
-                                    size='100%'
-                                    variant='determinate'
-                                    color={props.color}
-                                    value={(completedCases ?? 0) / props.totalCases * 100}
-                                    sx={{
-                                        '& .MuiCircularProgress-track': {
-                                            color: 'common.black',
-                                            opacity: 0.2
-                                        }
-                                    }}
-                                />
+                                props.nonPercent ?
+                                    <Typography variant='cardHeader' >
+                                        {completedCases}
+                                    </Typography>
+                                    :
+                                    <CircularProgress
+                                        enableTrackSlot
+                                        size='100%'
+                                        variant='determinate'
+                                        color={props.color}
+                                        value={(completedCases ?? 0) / props.totalCases * 100}
+                                        sx={{
+                                            '& .MuiCircularProgress-track': {
+                                                color: 'common.black',
+                                                opacity: 0.2
+                                            }
+                                        }}
+                                    />
                         }
                         {
-                            props.nonPercent ?
+                            props.nonPercent || completedCases === undefined ?
                                 <></>
                                 :
                                 <Typography variant='cardSubheader' position='absolute'>{((completedCases ?? 0) / props.totalCases * 100).toFixed(2)}%</Typography>
@@ -73,7 +76,7 @@ export function ProgressCard(props: { title: string, type: string, nonPercent?: 
                     </Box>
                     <Typography variant='cardHeader' textAlign='center'>{props.title}</Typography>
                     {
-                        props.nonPercent ?
+                        props.nonPercent || completedCases === undefined ?
                             <></>
                             :
                             <Typography variant='cardSubheader' textAlign='center'>{`${completedCases}/${props.totalCases}`}</Typography>
