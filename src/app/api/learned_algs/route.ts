@@ -2,21 +2,16 @@ import { NextRequest } from "next/server";
 
 import { createClient } from "@/utils/supabase/server"
 
-import { Case } from "@/types/case";
-
 export async function GET(req: NextRequest) {
-    const type = req.nextUrl.searchParams.get("type")
-    const buffer = req.nextUrl.searchParams.get("buffer")
-    const target_a = req.nextUrl.searchParams.get("target_a")
-    const target_b = req.nextUrl.searchParams.get("target_b")
+    const caseId = req.nextUrl.searchParams.get("case_id")
 
-    if (!type || !buffer || !target_a || !target_b) {
-        return Response.json({ message: "HTTP query missing one of the following search parameters: type, buffer, target_a, target_b" })
+    if (!caseId) {
+        return Response.json({ message: "HTTP query missing search parameter 'case_id'" })
     }
 
     const supabase = await createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
+    const user = await supabase.auth.getUser()
+    if (!user.data.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -28,11 +23,14 @@ export async function GET(req: NextRequest) {
                 case_id,
                 cases!inner ( id, buffer, target_a, target_b, type )
         `)
-        .eq("user_uuid", session.user.id)
-        .eq("cases.type", type)
-        .eq("cases.buffer", buffer)
-        .eq("cases.target_a", target_a)
-        .eq("cases.target_b", target_b)
+        .eq("user_uuid", user.data.user.id)
+        .eq("cases.id", caseId)
+        .overrideTypes<Array<{
+            id: number,
+            user_uuid: string,
+            case_id: number,
+            cases: { id: number, buffer: string, target_a: string, target_b: string, type: string }
+        }>>()
 
     if (res.error) {
         return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
@@ -42,27 +40,20 @@ export async function GET(req: NextRequest) {
         return Response.json({ learned: false })
     }
 
-    return Response.json({ learned: true })  // If we got a row, then the algorithm is marked as learned
+    return Response.json({ learned: true })
 }
 
 export async function POST(req: NextRequest) {
     const data = await req.json()
-    const type = data.type as string
-    const cs = data.case as Case
+    const caseId = data.case_id as number
 
-    if (!type) {
-        return Response.json({ message: "No type provided" })
-    }
-    if (!cs) {
-        return Response.json({ message: "No case provided" })
-    }
-    if (!cs.id) {
-        return Response.json({ message: "Case must have an id" })
+    if (!caseId) {
+        return Response.json({ message: "No case_id provided" })
     }
 
     const supabase = await createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
+    const user = await supabase.auth.getUser()
+    if (!user.data.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -74,28 +65,27 @@ export async function POST(req: NextRequest) {
             case_id,
             cases!inner ( id, type )
         `)
-        .eq("user_uuid", session.user.id)
-        .eq("case_id", cs.id)
-        .eq("cases.type", type)
+        .eq("user_uuid", user.data.user.id)
+        .eq("case_id", caseId)
 
     if (findExisting.error) {
-        return Response.json({ message: `An error occured while retrieving learned status of case ${cs.id} in the database`, error: findExisting.error })
+        return Response.json({ message: `An error occured while retrieving learned status of case ${caseId} in the database`, error: findExisting.error })
     }
 
     if (findExisting.data.length > 0) {
-        return Response.json({ message: `Case ${cs.id} already marked as learned` })
+        return Response.json({ message: `Case ${caseId} already marked as learned` })
     }
 
     const res = await supabase
         .from('learned_algs')
         .insert({
-            user_uuid: session.user.id,
-            case_id: cs.id,
+            user_uuid: user.data.user.id,
+            case_id: caseId,
         })
         .select()
 
     if (res.error) {
-        return Response.json({ message: `An error occured while adding learned status of case ${cs.id} in the database`, error: res.error })
+        return Response.json({ message: `An error occured while adding learned status of case ${caseId} in the database`, error: res.error })
     }
 
     return Response.json({ message: "Success", learnedRow: res.data[0] })
@@ -103,22 +93,15 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     const data = await req.json()
-    const type = data.type as string
-    const cs = data.case as Case
+    const caseId = data.case_id as number
 
-    if (!type) {
-        return Response.json({ message: "No type provided" })
-    }
-    if (!cs) {
-        return Response.json({ message: "No case provided" })
-    }
-    if (!cs.id) {
-        return Response.json({ message: "Case must have an id" })
+    if (!caseId) {
+        return Response.json({ message: "No case_id provided" })
     }
 
     const supabase = await createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
+    const user = await supabase.auth.getUser()
+    if (!user.data.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -130,28 +113,27 @@ export async function DELETE(req: NextRequest) {
             case_id,
             cases!inner ( id, type )
         `)
-        .eq("user_uuid", session.user.id)
-        .eq("case_id", cs.id)
-        .eq("cases.type", type)
+        .eq("user_uuid", user.data.user.id)
+        .eq("case_id", caseId)
 
     if (findExisting.error) {
-        return Response.json({ message: `An error occured while retrieving learned status of case ${cs.id} in the database`, error: findExisting.error })
+        return Response.json({ message: `An error occured while retrieving learned status of case ${caseId} in the database`, error: findExisting.error })
     }
 
     if (findExisting.data.length == 0) {
-        return Response.json({ message: `Case ${cs.id} already marked as not learned` })
+        return Response.json({ message: `Case ${caseId} already marked as not learned` })
     }
 
     const res = await supabase
         .from('learned_algs')
         .delete()
-        .eq("user_uuid", session.user.id)
+        .eq("user_uuid", user.data.user.id)
         .eq("id", findExisting.data[0].id)
-        .eq("case_id", cs.id)
+        .eq("case_id", caseId)
         .select()
 
     if (res.error) {
-        return Response.json({ message: `An error occured while adding learned status of case ${cs.id} in the database`, error: res.error })
+        return Response.json({ message: `An error occured while removing learned status of case ${caseId} in the database`, error: res.error })
     }
 
     return Response.json({ message: "Success", rowsDeleted: res.data })

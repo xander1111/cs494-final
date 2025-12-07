@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 
 import { CircularProgress, List, MenuItem, Stack, Typography } from "@mui/material";
 
-import { Case } from "@/types/case";
+import { edgeCategories } from "@/utils/categoryUtils";
+import { UserCaseInfo } from "@/types/userCaseInfo";
 
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
@@ -14,7 +15,7 @@ import { StatLine } from "@/components/statLine";
 
 
 export default function Home() {
-    const [cases, setCases] = useState<Case[] | undefined>()
+    const [userCaseInfos, setUserCaseInfos] = useState<UserCaseInfo[] | undefined>()
 
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [filter, setFilter] = useState<string>("")
@@ -22,14 +23,14 @@ export default function Home() {
     const [ascending, setAscending] = useState<boolean>(false)
 
     useEffect(() => {
-        async function getCases() {
-            const res = await fetch(`/api/cases?type=edge`)
+        async function getCaseInfo() {
+            const res = await fetch(`/api/user_case_info?type=edge`)
             const data = await res.json()
 
-            setCases(data.cases)
+            setUserCaseInfos(data.userCaseInfos)
         }
 
-        getCases()
+        getCaseInfo()
     }, [])
 
     return (
@@ -61,28 +62,22 @@ export default function Home() {
                     }}
                 >
                     {
-                        cases ?
-                            cases.map((cs, i) => (
-                                <CaseCard key={i} case={cs} color='primary' />
+                        userCaseInfos ?
+                            userCaseInfos.map((caseInfo, i) => (
+                                <CaseCard key={i} userCaseInfo={caseInfo} color='primary' />
                             ))
                             :
                             <CircularProgress color='primary' />
                     }
                 </List>
             </Stack>
+
             <StatsCard type="Edge">
-                {/* TODO get categories from DB */}
-                <StatLine category="Total" numericCompletion="x/y" percentCompletion={60} />
-                <StatLine category="4 Move" numericCompletion="x/y" percentCompletion={12} />
-                <StatLine category="5 Move" numericCompletion="x/y" percentCompletion={34} />
-                <StatLine category="M-Swap" numericCompletion="x/y" percentCompletion={56} />
-                <StatLine category="U-Swap" numericCompletion="x/y" percentCompletion={78} />
-                <StatLine category="E-Swap" numericCompletion="x/y" percentCompletion={90} />
-                <StatLine category="S-Swap" numericCompletion="x/y" percentCompletion={12} />
-                <StatLine category="F-Swap" numericCompletion="x/y" percentCompletion={23} />
-                <StatLine category="D-Swap" numericCompletion="x/y" percentCompletion={34} />
-                <StatLine category="S-Insert" numericCompletion="x/y" percentCompletion={45} />
-                <StatLine category="Algorithm" numericCompletion="x/y" percentCompletion={56} />
+                {
+                    Object.entries(edgeCategories).map((category, i) => (
+                        <StatLine key={i} category={category[0]} numericCompletion={`x/${category[1]}`} percentCompletion={60} />
+                    ))
+                }
             </StatsCard>
         </Stack>
     );

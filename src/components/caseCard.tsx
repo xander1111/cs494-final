@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { Checkbox, CircularProgress, Collapse, IconButton, Stack, Tooltip, Typography } from "@mui/material";
@@ -11,7 +11,7 @@ import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
 import { Algorithm } from "@/types/algorithm";
-import { Case } from "@/types/case";
+import { UserCaseInfo } from "@/types/userCaseInfo";
 
 import { UserAlgorithm } from "@/types/userAlgorithm";
 import { useUser } from "@/contexts/userContext";
@@ -21,23 +21,21 @@ import StyledDivider from "@/components/styledDivider";
 import StyledTextField from "@/components/styledTextField";
 import { CategoryChip } from "@/components/categoryChip";
 
-export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | 'error' | 'success' }) {
+export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' | 'secondary' | 'error' | 'success' }) {
     const user = useUser();
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [algorithms, setAlgorithms] = useState<Algorithm[] | undefined>()
     const [enteredAlg, setEnteredAlg] = useState<string>("")
-    const [algorithmUsed, setAlgorithmUsed] = useState<Algorithm | undefined>()
-    const [userAlg, setUserAlg] = useState<UserAlgorithm | undefined>()
-    const [loadingAlgUsed, setLoadingAlgUsed] = useState<boolean>(true)
-    const [learned, setLearned] = useState<boolean | undefined>()
+    const [algorithmUsed, setAlgorithmUsed] = useState<string | undefined>(props.userCaseInfo.algorithm)
+    const [learned, setLearned] = useState<boolean | undefined>(props.userCaseInfo.learned)
 
     const validInput = useMemo(() => /^[RUFLDBMESrufldbmeswxyz\'\[\]\(\)\:\,\s\d]+$/.test(enteredAlg) || enteredAlg.length == 0, [enteredAlg])
     const getHelperText = useMemo(() => (validInput ? "" : "Invalid algorithm notation"), [validInput])
 
     function loadAlgorithms() {
         if (!algorithms) {
-            fetch(`/api/algorithm?type=${props.case.type}&buffer=${'C'}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            fetch(`/api/algorithm?case_id=${props.userCaseInfo.case_id}`)
                 .then(data => data.json())
                 .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
         }
@@ -52,7 +50,7 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
 
         const alg = {
             algorithm: enteredAlg,
-            case: props.case
+            caseId: props.userCaseInfo.case_id,
         } as Algorithm
 
         setEnteredAlg("")
@@ -62,46 +60,41 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
             body: JSON.stringify({ algorithm: alg })
         })
 
-        const data = await fetch(`/api/algorithm?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+        const data = await fetch(`/api/algorithm?case_id=${props.userCaseInfo.case_id}`)
         const newAlgs = await data.json() as { algorithms: Algorithm[] }
         setAlgorithms(newAlgs.algorithms)
     }
 
-    async function setUsedAlg(usedAlg: Algorithm) {
+    async function setUsedAlg(algId: number) {
         async function updateUsedAlgs() {
-            setLoadingAlgUsed(true)
-            const res = await fetch(`/api/user_algorithm?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+            setAlgorithmUsed(undefined)  // Displays loading wheel
+
+            const res = await fetch(`/api/user_algorithm?type=${props.userCaseInfo.type}&buffer=${props.userCaseInfo.buffer}&target_a=${props.userCaseInfo.target_a}&target_b=${props.userCaseInfo.target_b}`)
             const data = await res.json()
 
-            console.log(data)
-            setUserAlg(data.userAlgorithm)
-            setAlgorithmUsed(data.userAlgorithm.alg)
-            setLoadingAlgUsed(false)
+            setAlgorithmUsed(data.userAlgorithm)
         }
 
         if (!user.user) {
             return
         }
 
-        const newUserAlg = {
-            id: userAlg?.id,
-            alg: usedAlg,
-            user_uuid: user.user.id
+        const newUsedAlg = {
+            id: props.userCaseInfo.user_alg_id,
+            algId: algId,
         } as UserAlgorithm
 
-        const res = await fetch('/api/user_algorithm', {
+        await fetch('/api/user_algorithm', {
             method: 'POST',
-            body: JSON.stringify({ userAlgorithm: newUserAlg })
+            body: JSON.stringify({ algorithm: newUsedAlg })
         })
-        const data = await res.json()
 
-        setUserAlg(data.userAlgorithm)
         updateUsedAlgs()
     }
 
     async function toggleLearned() {
-        async function loadLearned() {
-            const res = await fetch(`/api/learned_algs?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
+        async function updateLearned() {
+            const res = await fetch(`/api/learned_algs?case_id=${props.userCaseInfo.case_id}`)
             const data = await res.json()
 
             setLearned(data.learned)
@@ -113,44 +106,18 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
             // Going from not learned to learned
             await fetch('/api/learned_algs', {
                 method: 'POST',
-                body: JSON.stringify({ case: props.case, type: props.case.type })
+                body: JSON.stringify({ case_id: props.userCaseInfo.case_id })
             })
         } else {
             // Going from learned to not learned
             await fetch('/api/learned_algs', {
                 method: 'DELETE',
-                body: JSON.stringify({ case: props.case, type: props.case.type })
+                body: JSON.stringify({ case_id: props.userCaseInfo.case_id })
             })
         }
 
-        loadLearned()
+        updateLearned()
     }
-
-    useEffect(() => {
-        async function updateUsedAlgs() {
-            setLoadingAlgUsed(true)
-            const res = await fetch(`/api/user_algorithm?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
-            const data = await res.json()
-
-            setUserAlg(data.userAlgorithm)
-            setAlgorithmUsed(data.userAlgorithm.alg)
-            setLoadingAlgUsed(false)
-        }
-
-        async function loadLearned() {
-            const res = await fetch(`/api/learned_algs?type=${props.case.type}&buffer=${props.case.buffer}&target_a=${props.case.target_a}&target_b=${props.case.target_b}`)
-            const data = await res.json()
-
-            setLearned(data.learned)
-        }
-
-        if (!user.user) {
-            return  // Don't make API calls that require the user to be logged in
-        }
-
-        updateUsedAlgs()
-        loadLearned()
-    }, [])
 
     return (
         <StyledCard sx={{ width: '100%', mb: 2 }}>
@@ -159,12 +126,12 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
                 <Stack direction='row' justifyContent='space-between' spacing={2} width='100%' >
                     <Stack alignItems='flex-start'>
                         <Stack direction='row' spacing={2} >
-                            <Typography variant='cardHeader' color={props.color}>{props.case.target_a}{props.case.target_b}</Typography>
-                            <CategoryChip category={props.case.category} />
+                            <Typography variant='cardHeader' color={props.color}>{props.userCaseInfo.target_a}{props.userCaseInfo.target_b}</Typography>
+                            <CategoryChip category={props.userCaseInfo.category} />
                         </Stack>
                         {
                             user.user ?
-                                loadingAlgUsed ?
+                                algorithmUsed === undefined ?
                                     <CircularProgress color={props.color} size='1.5rem' />
                                     :
                                     <Tooltip title="Edit algorithm">
@@ -178,7 +145,7 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
                                                 loadAlgorithms()
                                             }}
                                         >
-                                            {algorithmUsed?.algorithm ?? "No algorithm set"} <EditIcon sx={{ fontSize: 'inherit' }} />
+                                            {algorithmUsed.length == 0 ? "No algorithm set" : algorithmUsed} <EditIcon sx={{ fontSize: 'inherit' }} />
                                         </Typography>
                                     </Tooltip>
                                 :
@@ -267,7 +234,7 @@ export function CaseCard(props: { case: Case, color: 'primary' | 'secondary' | '
                             algorithms ?
                                 algorithms.map((alg, i) => (
                                     user.user ?
-                                        <Tooltip key={i} title={"Click to select this algorithm"} onClick={() => { setUsedAlg(alg) }}>
+                                        <Tooltip key={i} title={"Click to select this algorithm"} onClick={() => { setUsedAlg(alg.id!) }}>
                                             <Typography variant='cardSubheader'>{alg.algorithm}</Typography>
                                         </Tooltip>
                                         :

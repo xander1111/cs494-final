@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 
 import { CircularProgress, List, MenuItem, Stack, Typography } from "@mui/material";
 
-import { Case } from "@/types/case";
-
 import { cornerCategories } from "@/utils/categoryUtils";
+import { UserCaseInfo } from "@/types/userCaseInfo";
 
 import StyledTextField from "@/components/styledTextField";
 import StyledSelect from "@/components/styledSelect";
@@ -16,7 +15,7 @@ import { StatLine } from "@/components/statLine";
 
 
 export default function Home() {
-    const [cases, setCases] = useState<Case[] | undefined>()
+    const [userCaseInfos, setUserCaseInfos] = useState<UserCaseInfo[] | undefined>()
 
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [filter, setFilter] = useState<string>("")
@@ -24,14 +23,14 @@ export default function Home() {
     const [ascending, setAscending] = useState<boolean>(false)
 
     useEffect(() => {
-        async function getCases() {
-            const res = await fetch(`/api/cases?type=corner`)
+        async function getCaseInfo() {
+            const res = await fetch(`/api/user_case_info?type=corner`)
             const data = await res.json()
 
-            setCases(data.cases)
+            setUserCaseInfos(data.userCaseInfos)
         }
 
-        getCases()
+        getCaseInfo()
     }, [])
 
     return (
@@ -63,9 +62,9 @@ export default function Home() {
                     }}
                 >
                     {
-                        cases ?
-                            cases.map((cs, i) => (
-                                <CaseCard key={i} case={cs} color='secondary' />
+                        userCaseInfos ?
+                            userCaseInfos.map((caseInfo, i) => (
+                                <CaseCard key={i} userCaseInfo={caseInfo} color='secondary' />
                             ))
                             :
                             <CircularProgress color='secondary' />

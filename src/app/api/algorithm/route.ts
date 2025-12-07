@@ -5,13 +5,10 @@ import { createClient } from "@/utils/supabase/server"
 import { Algorithm } from "@/types/algorithm"
 
 export async function GET(req: NextRequest) {
-    const type = req.nextUrl.searchParams.get("type")
-    const buffer = req.nextUrl.searchParams.get("buffer")
-    const target_a = req.nextUrl.searchParams.get("target_a")
-    const target_b = req.nextUrl.searchParams.get("target_b")
+    const caseId = req.nextUrl.searchParams.get("case_id")
 
-    if (!type || !buffer || !target_a || !target_b) {
-        return Response.json({ message: "HTTP query missing one of the following search parameters: type, buffer, target_a, target_b" })
+    if (!caseId) {
+        return Response.json({ message: "HTTP query missing search parameter 'case_id'" })
     }
 
     const supabase = await createClient()
@@ -25,10 +22,7 @@ export async function GET(req: NextRequest) {
             type,
             algorithms ( id, algorithm )
         `)
-        .eq("buffer", buffer)
-        .eq("target_a", target_a)
-        .eq("target_b", target_b)
-        .eq("type", type)
+        .eq("id", caseId)
 
     if (res.error) {
         return Response.json({ message: "An error occured while retreiving data from the database", error: res.error })
@@ -48,8 +42,8 @@ export async function POST(req: NextRequest) {
     if (!alg) {
         return Response.json({ message: "No algorithm provided" })
     }
-    if (!alg.case) {
-        return Response.json({ message: "algorithm.case must be defined" })
+    if (!alg.caseId) {
+        return Response.json({ message: "Algorithm must have a caseId" })
     }
 
     const validAlg = /^[RUFLDBMESrufldbmeswxyz\'\[\]\(\)\:\,\s\d]+$/.test(alg.algorithm)
@@ -64,26 +58,11 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "Must be logged in" })
     }
 
-    let caseId = alg.case.id
-
-    if (!caseId) {
-        const res = await supabase
-            .from('cases')
-            .insert(alg.case)
-            .select()
-
-        if (res.error) {
-            return Response.json({ message: `An error occured while creating case ${alg.case} in the database`, error: res.error })
-        }
-
-        caseId = res.data[0].id as number
-    }
-
     const res = await supabase
         .from('algorithms')
         .insert({
             algorithm: alg.algorithm,
-            case_id: caseId
+            case_id: alg.caseId
         })
         .select()
 

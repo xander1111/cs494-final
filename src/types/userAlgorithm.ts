@@ -1,7 +1,5 @@
-import { Algorithm } from "@/types/algorithm";
-
 export type UserAlgorithm = {
     id?: number,
-    alg: Algorithm,
+    algId: number,
     user_uuid: string,
 }

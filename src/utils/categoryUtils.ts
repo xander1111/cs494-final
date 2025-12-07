@@ -12,7 +12,7 @@ const colorMap: {[key: string]: 'primary' | 'secondary' | 'error' | 'success'} =
     "U-Any, U-Any": 'primary',
 
     // Edges
-    "4 Move": 'success',
+    "4-Mover": 'success',
     "M-Swap": 'secondary',
     "U-Swap": 'secondary',
     "E-Swap": 'secondary',

@@ -3,8 +3,6 @@ import { NextRequest } from "next/server"
 import { createClient } from "@/utils/supabase/server"
 
 import { UserAlgorithm } from "@/types/userAlgorithm"
-import { Algorithm } from "@/types/algorithm"
-import { Case } from "@/types/case"
 
 export async function GET(req: NextRequest) {
     const type = req.nextUrl.searchParams.get("type")
@@ -17,8 +15,8 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
+    const user = await supabase.auth.getUser()
+    if (!user || !user.data.user) {
         return Response.json({ message: "Must be logged in" })
     }
 
@@ -32,7 +30,7 @@ export async function GET(req: NextRequest) {
                 id, alg_id, user_uuid
             )
         `)
-        .eq("user_algorithm.user_uuid", session.user.id)
+        .eq("user_algorithm.user_uuid", user.data.user.id)
         .eq("cases.type", type)
         .eq("cases.buffer", buffer)
         .eq("cases.target_a", target_a)
@@ -55,40 +53,37 @@ export async function GET(req: NextRequest) {
         return Response.json({ userAlgorithm: {} })
     }
 
-    const cs = {
-        id: res.data[0].cases.id,
-        type: res.data[0].cases.type,
-        buffer: res.data[0].cases.buffer,
-        target_a: res.data[0].cases.target_a,
-        target_b: res.data[0].cases.target_b,
-    } as Case
+    // const cs = {
+    //     id: res.data[0].cases.id,
+    //     type: res.data[0].cases.type,
+    //     buffer: res.data[0].cases.buffer,
+    //     target_a: res.data[0].cases.target_a,
+    //     target_b: res.data[0].cases.target_b,
+    // } as Case
 
-    const alg = {
-        id: res.data[0].id,
-        algorithm: res.data[0].algorithm,
-        case: cs,
-    } as Algorithm
+    // const alg = {
+    //     id: res.data[0].id,
+    //     algorithm: res.data[0].algorithm,
+    //     case: cs,
+    // } as Algorithm
 
-    const userAlg = {
-        id: res.data[0].user_algorithm[0].id,
-        alg: alg,
-        user_uuid: res.data[0].user_algorithm[0].user_uuid,
-    } as UserAlgorithm
-
-    return Response.json({ userAlgorithm: userAlg })
+    return Response.json({ userAlgorithm: res.data[0].algorithm })
 }
 
 
 export async function POST(req: NextRequest) {
     const data = await req.json()
-    const userAlg = data.userAlgorithm as UserAlgorithm
+    const userAlg = data.algorithm as {
+        id?: number,
+        algId: number,
+    } as UserAlgorithm
 
     if (!userAlg) {
-        return Response.json({ message: "No userAlgorithm provided" })
+        return Response.json({ message: "No algorithm provided" })
     }
 
-    if (!userAlg.alg.id) {
-        return Response.json({ message: "Algorithm on userAlgorithm has no id" })
+    if (!userAlg.algId) {
+        return Response.json({ message: "Algorithm requires algId" })
     }
 
     const supabase = await createClient()
@@ -97,12 +92,14 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "Must be logged in" })
     }
 
+    console.log(`Upserting ID ${userAlg.id}`)
+
     const res = await supabase
         .from('user_algorithm')
         .upsert({
             id: userAlg.id,
-            user_uuid: userAlg.user_uuid,
-            alg_id: userAlg.alg.id
+            user_uuid: user.data.user.id,
+            alg_id: userAlg.algId
         })
         .select()
 
