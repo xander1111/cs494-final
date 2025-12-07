@@ -2,7 +2,6 @@ import { NextRequest } from "next/server"
 
 import { createClient } from "@/utils/supabase/server"
 
-import { UserWord } from "@/types/userWord"
 import { Word } from "@/types/word"
 
 export async function GET(req: NextRequest) {
@@ -82,14 +81,10 @@ export async function DELETE(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     const data = await req.json()
-    const userWord = data.userWord as UserWord
+    const wordId = data.wordId as number
 
-    if (!userWord) {
-        return Response.json({ message: "No userWord provided" })
-    }
-
-    if (!userWord.word.id) {
-        return Response.json({ message: "Word on userWord has no id" })
+    if (!wordId) {
+        return Response.json({ message: "No wordId provided" })
     }
 
     const supabase = await createClient()
@@ -101,8 +96,8 @@ export async function POST(req: NextRequest) {
     const res = await supabase
         .from('user_word')
         .insert({
-            user_uuid: userWord.user_uuid,
-            word_id: userWord.word.id
+            user_uuid: user.data.user.id,
+            word_id: wordId,
         })
         .select()
 
@@ -110,5 +105,5 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "An error occured while creating user_algorithm in the database", error: res.error })
     }
 
-    return Response.json({ message: "Success", userWord: res.data[0] as UserWord })
+    return Response.json({ message: "Success", userWordId: res.data[0].id })
 }

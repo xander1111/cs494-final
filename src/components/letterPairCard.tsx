@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 
 import { Collapse, CircularProgress, IconButton, Stack, Tooltip, Typography } from "@mui/material";
@@ -8,7 +8,6 @@ import AddIcon from '@mui/icons-material/Add';
 import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined';
 
 import { Word } from "@/types/word";
-import { UserWord } from "@/types/userWord";
 import { UserWordInfo } from "@/types/userWordInfo";
 import { useUser } from "@/contexts/userContext";
 
@@ -95,14 +94,9 @@ export function LetterPairCard(props: { userWordInfo: UserWordInfo , color: 'pri
             return
         }
 
-        const newUserWord = {
-            word: word,
-            user_uuid: user.user.id,
-        } as UserWord
-
         await fetch('/api/user_word', {
             method: 'POST',
-            body: JSON.stringify({ userWord: newUserWord })
+            body: JSON.stringify({ wordId: word.id })
         })
 
         updateUsedWords()

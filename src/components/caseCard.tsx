@@ -13,7 +13,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { Algorithm } from "@/types/algorithm";
 import { UserCaseInfo } from "@/types/userCaseInfo";
 
-import { UserAlgorithm } from "@/types/userAlgorithm";
 import { useUser } from "@/contexts/userContext";
 
 import StyledCard from "@/components/styledCard";
@@ -82,7 +81,7 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
         const newUsedAlg = {
             id: props.userCaseInfo.user_alg_id,
             algId: algId,
-        } as UserAlgorithm
+        }
 
         await fetch('/api/user_algorithm', {
             method: 'POST',

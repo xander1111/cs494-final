@@ -2,8 +2,6 @@ import { NextRequest } from "next/server"
 
 import { createClient } from "@/utils/supabase/server"
 
-import { UserAlgorithm } from "@/types/userAlgorithm"
-
 export async function GET(req: NextRequest) {
     const caseId = req.nextUrl.searchParams.get("case_id")
 
@@ -56,7 +54,7 @@ export async function POST(req: NextRequest) {
     const userAlg = data.algorithm as {
         id?: number,
         algId: number,
-    } as UserAlgorithm
+    }
 
     if (!userAlg) {
         return Response.json({ message: "No algorithm provided" })
@@ -87,5 +85,5 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "An error occured while creating user_algorithm in the database", error: res.error })
     }
 
-    return Response.json({ message: "Success", userAlgorithm: res.data[0] as UserAlgorithm })
+    return Response.json({ message: "Success", userAlgorithmId: res.data[0].id })
 }
