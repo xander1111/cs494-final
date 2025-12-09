@@ -27,8 +27,8 @@ export async function GET(req: NextRequest) {
         `)
         .eq("user_algorithm.user_uuid", user.data.user.id)
         .eq("cases.id", caseId)
-        .limit(1, {referencedTable: 'cases'})
-        .limit(1, {referencedTable: 'user_algorithm'})
+        .limit(1, { referencedTable: 'cases' })
+        .limit(1, { referencedTable: 'user_algorithm' })
         .limit(1)
         .overrideTypes<Array<{
             id: number
@@ -70,15 +70,21 @@ export async function POST(req: NextRequest) {
         return Response.json({ message: "Must be logged in" })
     }
 
-    console.log(`Upserting ID ${userAlg.id}`)
-
-    const res = await supabase
-        .from('user_algorithm')
-        .upsert({
+    const rowToUpsert = userAlg.id ?
+        {
             id: userAlg.id,
             user_uuid: user.data.user.id,
             alg_id: userAlg.algId
-        })
+        }
+        :
+        {
+            user_uuid: user.data.user.id,
+            alg_id: userAlg.algId
+        }
+
+    const res = await supabase
+        .from('user_algorithm')
+        .upsert(rowToUpsert)
         .select()
 
     if (res.error) {

@@ -36,7 +36,10 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
         if (!algorithms) {
             fetch(`/api/algorithm?case_id=${props.userCaseInfo.case_id}`)
                 .then(data => data.json())
-                .then((data: { algorithms: Algorithm[] }) => { setAlgorithms(data.algorithms) })
+                .then((data: { algorithms: Algorithm[] }) => {
+                    console.log(data.algorithms)
+                    setAlgorithms(data.algorithms)
+                })
         }
     }
 
