@@ -50,7 +50,7 @@ export default function Home() {
         async function filterCases() {
             let newFilteredCases = sortedUserCaseInfos ? [...sortedUserCaseInfos].filter(userCase =>
                 (userCase.target_a.toLowerCase() + userCase.target_b?.toLowerCase()).includes(searchTerm.toLowerCase()) ||
-                userCase.algorithm.toLowerCase().includes(searchTerm.toLowerCase())
+                userCase.algorithm?.toLowerCase().includes(searchTerm.toLowerCase())
             ) : undefined
 
             if (newFilteredCases && filter)

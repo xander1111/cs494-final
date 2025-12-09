@@ -50,7 +50,7 @@ export default function Home() {
         async function filterCases() {
             let newFilteredCases = sortedUserCaseInfos ? [...sortedUserCaseInfos].filter(userCase =>
                 (userCase.target_a.toLowerCase() + userCase.target_b?.toLowerCase()).includes(searchTerm.toLowerCase()) ||
-                userCase.algorithm.toLowerCase().includes(searchTerm.toLowerCase())
+                userCase.algorithm?.toLowerCase().includes(searchTerm.toLowerCase())
             ) : undefined
 
             if (newFilteredCases && filter)
@@ -71,7 +71,7 @@ export default function Home() {
         }
 
         async function getCases() {
-            const res = await fetch(`/api/cases?type=corner`)
+            const res = await fetch(`/api/cases?type=edge`)
             const data = await res.json()
             const cases = data.cases as Case[]
 
@@ -159,7 +159,7 @@ export default function Home() {
             <StatsCard type="Edge">
                 {
                     Object.entries(edgeCategories).map((category, i) => (
-                        <StatLine key={i} category={category[0]} type='corner' totalCases={category[1]} setFilter={category[0] === 'Total' ? undefined : setFilter} />
+                        <StatLine key={i} category={category[0]} type='edge' totalCases={category[1]} setFilter={category[0] === 'Total' ? undefined : setFilter} />
                     ))
                 }
             </StatsCard>
