@@ -73,9 +73,9 @@ export default function Home() {
           <StyledCard>
             <Stack direction='column' spacing={5}>
               <Stack direction='column'>
-                <Typography variant='cardHeader'>Welcome to 3 style, the blindfolded solving tracker</Typography>
-                <Typography variant='cardSubheader'><Link href='/login'>Log in or create an account</Link> to start tracking your progress in learning the 3 style method and what words you use for letter pairs.</Typography>
-                <Typography variant='cardSubheader'>Or just start exploring what algorithms and words other people have submitted to our databse!</Typography>
+                <Typography variant='cardHeader'>Welcome to Learn 3 Style, the 3-Style blindfolded method learning tool</Typography>
+                <Typography variant='cardSubheader'><Link href='/login'>Log in or create an account</Link> to start tracking your progress in learning the 3-Style method and what words you use for letter pairs.</Typography>
+                <Typography variant='cardSubheader'>Or explore what algorithms and words other people have submitted to our database!</Typography>
               </Stack>
               <Stack direction='row' justifyContent='space-evenly' width='100%'>
                 <Stack direction='column'>
