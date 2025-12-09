@@ -67,21 +67,18 @@ export function WeeklyProgressCard() {
             ])
 
             // Estimate completion date
-            const cornerRemaining = 378 - cornersOverall
-            const edgeRemaining = 378 - edgesOverall
+            const casesRemaining = 818 - cornersOverall - edgesOverall
 
-            const cornerPace = (cornersRecent ?? 0) / 7
-            const edgePace = (edgesRecent ?? 0) / 7
+            const pace = ((cornersRecent ?? 0) + (edgesRecent ?? 0)) / 7
 
-            const cornerDaysToComplete = cornerRemaining / cornerPace
-            const edgeDaysToComplete = edgeRemaining / edgePace
+            const daysToComplete = casesRemaining / pace
 
-            if (cornerDaysToComplete < 0 && edgeDaysToComplete < 0) {
+            if (daysToComplete < 0) {
                 setCompletionEstimate(true)
-            } else if (cornerDaysToComplete == Infinity || edgeDaysToComplete == Infinity) {
+            } else if (daysToComplete == Infinity) {
                 setCompletionEstimate(false)
             } else {
-                setCompletionEstimate(new Date(Date.now() + Math.max(cornerDaysToComplete, edgeDaysToComplete) * 24 * 60 * 60 * 1000))
+                setCompletionEstimate(new Date(Date.now() + daysToComplete * 24 * 60 * 60 * 1000))
             }
         }
 
