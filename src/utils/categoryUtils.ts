@@ -19,7 +19,7 @@ const colorMap: {[key: string]: 'primary' | 'secondary' | 'error' | 'success'} =
     "S-Swap": 'secondary',
     "F-Swap": 'secondary',
     "S-Insert": 'secondary',
-    "Algorithm": 'primary',
+    "Alg": 'primary',
 }
 
 export const cornerCategories = {
@@ -42,7 +42,7 @@ export const edgeCategories = {
     "S-Swap": 36,
     "F-Swap": 16,
     "S-Insert": 8,
-    "Algorithm": 24,
+    "Alg": 24,
     "Total": 440,
 }
 
