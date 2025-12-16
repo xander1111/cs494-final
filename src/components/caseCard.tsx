@@ -27,6 +27,7 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
     const [algorithms, setAlgorithms] = useState<Algorithm[] | undefined>()
     const [enteredAlg, setEnteredAlg] = useState<string>("")
     const [algorithmUsed, setAlgorithmUsed] = useState<string | undefined>(props.userCaseInfo.algorithm)
+    const [userAlgId, setUserAlgId] = useState<number | undefined>(props.userCaseInfo.user_alg_id)
     const [learned, setLearned] = useState<boolean | undefined>(props.userCaseInfo.learned)
 
     const validInput = useMemo(() => /^[RUFLDBMESrufldbmeswxyz\'\[\]\(\)\:\,\s\d]+$/.test(enteredAlg) || enteredAlg.length == 0, [enteredAlg])
@@ -82,14 +83,17 @@ export function CaseCard(props: { userCaseInfo: UserCaseInfo, color: 'primary' |
         }
 
         const newUsedAlg = {
-            id: props.userCaseInfo.user_alg_id,
+            id: userAlgId,
             algId: algId,
         }
 
-        await fetch('/api/user_algorithm', {
+        const res = await fetch('/api/user_algorithm', {
             method: 'POST',
             body: JSON.stringify({ algorithm: newUsedAlg })
         })
+        const data = await res.json()
+        setUserAlgId(data.userAlgorithmId)
+
 
         updateUsedAlgs()
     }

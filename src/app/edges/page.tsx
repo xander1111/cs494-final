@@ -111,7 +111,12 @@ export default function Home() {
                                 color='primary'
                             >
                                 <MenuItem value="alphabetical">Alphabetical</MenuItem>
-                                <MenuItem value="learned">Learned</MenuItem>
+                                {
+                                    user.user ?
+                                        <MenuItem value="learned">Learned</MenuItem>
+                                    :
+                                    null
+                                }
                             </StyledSelect>
                             <Tooltip title="Toggle ascending/descending" >
                                 <ExpandMoreIcon
