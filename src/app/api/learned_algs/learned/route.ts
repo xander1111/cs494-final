@@ -35,7 +35,6 @@ export async function GET(req: NextRequest) {
                 cases!inner ( )
             `, { count: 'exact' })
         .eq('user_uuid', user.data.user.id)
-        .gt('time_added', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
 
     if (type) {
         overallQuery = overallQuery.eq("cases.type", type)
